@@ -1,0 +1,140 @@
+---
+import { Image } from 'astro:assets';
+import { ArrowRight, Clock, Check } from '@lucide/astro';
+import BaseLayout from '../layouts/BaseLayout.astro';
+import PageHero from '../components/PageHero.astro';
+import SectionHeading from '../components/SectionHeading.astro';
+import CTASection from '../components/CTASection.astro';
+import FaqAccordion from '../components/FaqAccordion.astro';
+import { steps } from '../data/process';
+import { photo } from '../lib/photos';
+import { url } from '../lib/url';
+import { breadcrumbs, howToSchema, faqPage } from '../lib/seo';
+
+const origin = new URL(url('/'), Astro.site).href;
+const pageUrl = new URL(url('/proces'), Astro.site).href;
+
+const pageFaq = [
+  { q: 'Cât durează de la primul telefon până la montaj?', a: 'Între 3 și 8 săptămâni în total: 1–3 zile până la măsurători, 3–5 zile pentru proiect și ofertă, apoi 2–6 săptămâni de producție, în funcție de produs.' },
+  { q: 'Pot schimba ceva după ce am aprobat proiectul?', a: 'Până la comanda materialelor, da. După ce plăcile intră la debitat pe cotele aprobate, modificările înseamnă material pierdut, deci se retarifează.' },
+  { q: 'Ce trebuie să fie gata în casă înainte de măsurători?', a: 'Pereții finisați (glet, vopsea, faianță), pardoseala pusă sau cu grosimea stratului comunicată, instalațiile mutate în poziția finală și modelele de electrocasnice stabilite.' },
+  { q: 'Cine face montajul?', a: 'Echipa noastră, nu un subcontractor. Tot noi venim și pentru reglaje, în garanție sau după.' },
+];
+
+const schemas = [
+  breadcrumbs([{ name: 'Acasă', url: origin }, { name: 'Cum lucrăm', url: pageUrl }]),
+  howToSchema(steps, 'Cum se face o mobilă la comandă, pas cu pas'),
+  faqPage(pageFaq),
+];
+---
+
+<BaseLayout
+  title="Cum lucrăm — de la măsurători la montaj"
+  description="Procesul complet, în șapte pași: cerere de ofertă, măsurători, proiect, avans, producție în atelier, livrare, montaj și recepție. Cu termene reale."
+  image={photo('stock/atelier/02')}
+  schemas={schemas}
+>
+  <PageHero
+    eyebrow="Cum lucrăm"
+    title='Șapte pași, fără <em class="italic-serif text-oak-300">surprize</em>'
+    text="Vă spunem de la început ce urmează, cine ce face și cât durează fiecare etapă. Nimic nu pornește fără acordul dumneavoastră scris pe proiect."
+    image="stock/atelier/02"
+    crumbs={[{ name: 'Acasă', href: url('/') }, { name: 'Cum lucrăm' }]}
+  />
+
+  <section class="bg-bone-100 py-20 md:py-28">
+    <div class="container-x">
+      <ol class="relative border-l border-walnut-900/12 pl-8 md:pl-14">
+        {
+          steps.map((s, i) => (
+            <li class="relative pb-16 last:pb-0" data-reveal data-delay={Math.min(i, 6) * 0.04}>
+              <span class="absolute -left-[2.35rem] top-1 flex h-9 w-9 items-center justify-center rounded-full bg-walnut-900 font-serif text-sm text-oak-300 md:-left-[4.1rem] md:h-11 md:w-11 md:text-base">
+                {s.n}
+              </span>
+              <div class="grid gap-6 lg:grid-cols-12">
+                <div class="lg:col-span-7">
+                  <h2 class="font-serif text-[clamp(1.5rem,2.6vw,2.2rem)] leading-tight text-walnut-900">{s.title}</h2>
+                  <p class="mt-4 max-w-2xl leading-relaxed text-muted">{s.text}</p>
+                </div>
+                <div class="lg:col-span-4 lg:col-start-9">
+                  <p class="inline-flex items-center gap-2 rounded-full bg-bone-200 px-4 py-2 text-[0.62rem] font-bold uppercase tracking-[0.16em] text-walnut-800">
+                    <Clock size={12} /> {s.duration}
+                  </p>
+                </div>
+              </div>
+            </li>
+          ))
+        }
+      </ol>
+    </div>
+  </section>
+
+  <section class="relative h-[58svh] min-h-[360px] overflow-hidden">
+    <div class="absolute inset-x-0 -top-[12%] h-[124%]" data-parallax="8">
+      <Image
+        src={photo('stock/atelier/03')}
+        alt="Tâmplar la bancul de lucru, în atelierul din Pârjol"
+        widths={[768, 1280, 1920]}
+        sizes="100vw"
+        class="img-cover"
+      />
+    </div>
+    <div class="absolute inset-0 bg-walnut-950/55"></div>
+    <div class="container-x relative flex h-full items-center">
+      <p class="max-w-3xl font-serif text-[clamp(1.5rem,3.4vw,2.9rem)] leading-tight text-white" data-reveal>
+        Modificările pe desen sunt gratuite. În atelier, nu. De asta insistăm să vedeți proiectul înainte
+        să tăiem prima placă.
+      </p>
+    </div>
+  </section>
+
+  <section class="bg-bone-200/60 py-20 md:py-28">
+    <div class="container-x grid gap-14 lg:grid-cols-12">
+      <div class="lg:col-span-5">
+        <SectionHeading
+          eyebrow="Pregătire"
+          title='Ce trebuie să fie gata înainte de <em class="italic-serif">măsurători</em>'
+          text="Cu cât spațiul e mai aproape de forma finală, cu atât măsurătoarea e mai exactă și montajul mai rapid."
+          size="md"
+        />
+        <a href={url('/ghiduri/cum-masori-corect-pentru-mobila-la-comanda')} class="arrow-link mt-10 text-walnut-800" data-reveal>
+          Ghidul de măsurare <ArrowRight size={16} />
+        </a>
+      </div>
+      <div class="lg:col-span-6 lg:col-start-7">
+        <ul class="space-y-5">
+          {
+            [
+              { t: 'Pereții finisați', d: 'Glet, vopsea sau faianță montată. Măsurăm pe peretele final, nu pe cărămidă.' },
+              { t: 'Pardoseala pusă', d: 'Sau, dacă nu se poate, grosimea exactă a stratului care urmează.' },
+              { t: 'Instalațiile mutate', d: 'Prize, întrerupătoare, apă, gaz, scurgere — în poziția lor finală.' },
+              { t: 'Electrocasnicele alese', d: 'Modelele exacte, ca să croim nișele pe dimensiunile lor reale.' },
+              { t: 'Ușile și ferestrele montate', d: 'Inclusiv pervazurile, care de multe ori limitează blatul.' },
+            ].map((item, i) => (
+              <li class="flex gap-4 border-b border-walnut-900/10 pb-5" data-reveal data-delay={i * 0.05}>
+                <Check size={18} stroke-width={2.2} class="mt-1 shrink-0 text-oak-600" />
+                <div>
+                  <p class="font-serif text-lg text-walnut-900">{item.t}</p>
+                  <p class="mt-1 text-sm text-muted">{item.d}</p>
+                </div>
+              </li>
+            ))
+          }
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <section class="bg-bone-100 py-20 md:py-28">
+    <div class="container-x grid gap-14 lg:grid-cols-12">
+      <div class="lg:col-span-4">
+        <SectionHeading eyebrow="Întrebări" title='Despre <em class="italic-serif">proces</em>' size="md" />
+      </div>
+      <div class="lg:col-span-7 lg:col-start-6">
+        <FaqAccordion items={pageFaq} />
+      </div>
+    </div>
+  </section>
+
+  <CTASection />
+</BaseLayout>

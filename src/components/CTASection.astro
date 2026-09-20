@@ -1,0 +1,37 @@
+---
+import { ArrowRight, Phone, MessageCircle } from '@lucide/astro';
+import { site } from '../data/site';
+import { url } from '../lib/url';
+
+interface Props {
+  title?: string;
+  text?: string;
+  class?: string;
+}
+
+const {
+  title = 'Spuneți-ne ce aveți nevoie',
+  text = 'Măsurătorile și proiectul sunt gratuite în tot județul Bacău. Trimiteți-ne câteva poze cu spațiul și vă răspundem în aceeași zi.',
+  class: className = '',
+} = Astro.props;
+---
+
+<section class:list={['grain relative overflow-hidden bg-walnut-900 py-24 text-bone-50 md:py-36', className]}>
+  <div class="pointer-events-none absolute inset-y-0 right-0 w-1/2 text-oak-400 slats" aria-hidden="true"></div>
+  <div class="container-x relative">
+    <div class="max-w-3xl">
+      <p class="eyebrow eyebrow-light" data-reveal>Cerere de ofertă</p>
+      <h2 class="display-lg mt-6" data-split set:html={title} />
+      <p class="lead mt-8 !text-bone-100/70" data-reveal>{text}</p>
+      <div class="mt-12 flex flex-wrap gap-4" data-reveal>
+        <a href={url('/contact')} class="btn btn-oak">Cere ofertă gratuită <ArrowRight size={16} /></a>
+        <a href={site.whatsapp} target="_blank" rel="noopener" class="btn btn-whatsapp">
+          <MessageCircle size={16} /> WhatsApp
+        </a>
+        <a href={site.phoneHref} class="btn btn-ghost-light">
+          <Phone size={15} /> {site.phone}
+        </a>
+      </div>
+    </div>
+  </div>
+</section>

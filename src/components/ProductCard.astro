@@ -1,0 +1,45 @@
+---
+import { Image } from 'astro:assets';
+import { ArrowUpRight } from '@lucide/astro';
+import type { Product } from '../data/products';
+import { photo } from '../lib/photos';
+import { url } from '../lib/url';
+
+interface Props {
+  product: Product;
+  index?: number;
+  class?: string;
+  eager?: boolean;
+}
+
+const { product, index = 0, class: className = '', eager = false } = Astro.props;
+const img = photo(product.hero);
+---
+
+<a
+  href={url(`/servicii/${product.slug}`)}
+  class:list={['group relative block overflow-hidden rounded-[1.5rem] bg-walnut-900', className]}
+  data-reveal
+  data-delay={index * 0.06}
+>
+  <div class="aspect-[4/5] overflow-hidden">
+    <Image
+      src={img}
+      alt={`${product.name} la comandă – ${product.eyebrow}`}
+      widths={[400, 700, 1000]}
+      sizes="(min-width: 1024px) 30vw, (min-width: 640px) 45vw, 85vw"
+      loading={eager ? 'eager' : 'lazy'}
+      class="img-cover transition-transform duration-[1.6s] ease-[var(--ease-out-expo)] group-hover:scale-[1.06]"
+    />
+  </div>
+  <div class="absolute inset-0 bg-gradient-to-t from-walnut-950 via-walnut-950/25 to-transparent"></div>
+  <div class="absolute inset-x-0 bottom-0 flex items-end justify-between gap-4 p-6 text-bone-50 md:p-7">
+    <div>
+      <p class="text-[0.62rem] font-bold uppercase tracking-[0.2em] text-oak-300">{product.eyebrow}</p>
+      <p class="mt-2 font-serif text-[1.6rem] leading-tight tracking-[-0.02em] md:text-[1.85rem]">{product.name}</p>
+    </div>
+    <span class="flex h-11 w-11 shrink-0 items-center justify-center rounded-full border border-bone-50/35 transition-all duration-500 group-hover:rotate-45 group-hover:border-oak-400 group-hover:bg-oak-400 group-hover:text-walnut-900">
+      <ArrowUpRight size={18} />
+    </span>
+  </div>
+</a>

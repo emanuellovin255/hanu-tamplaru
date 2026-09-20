@@ -1,0 +1,157 @@
+---
+import { Phone, Mail, MapPin, Clock, MessageCircle, ArrowRight } from '@lucide/astro';
+import BaseLayout from '../layouts/BaseLayout.astro';
+import PageHero from '../components/PageHero.astro';
+import QuoteForm from '../components/QuoteForm.astro';
+import SectionHeading from '../components/SectionHeading.astro';
+import FaqAccordion from '../components/FaqAccordion.astro';
+import { site, fullAddress, mapsEmbed, mapsLink } from '../data/site';
+import { steps } from '../data/process';
+import { faq } from '../data/faq';
+import { photo } from '../lib/photos';
+import { url } from '../lib/url';
+import { breadcrumbs, faqPage } from '../lib/seo';
+
+const origin = new URL(url('/'), Astro.site).href;
+const pageUrl = new URL(url('/contact'), Astro.site).href;
+
+const schemas = [
+  breadcrumbs([{ name: 'Acasă', url: origin }, { name: 'Contact', url: pageUrl }]),
+  {
+    '@context': 'https://schema.org',
+    '@type': 'ContactPage',
+    name: `Contact ${site.name}`,
+    url: pageUrl,
+  },
+  faqPage(faq.slice(0, 5)),
+];
+---
+
+<BaseLayout
+  title="Contact și cerere de ofertă"
+  description={`Cereți o ofertă pentru mobilă la comandă în județul Bacău. Telefon ${site.phone}, WhatsApp sau formular. Măsurători gratuite, răspuns în aceeași zi.`}
+  image={photo('stock/bucatarii/03')}
+  schemas={schemas}
+>
+  <PageHero
+    eyebrow="Contact"
+    title='Spuneți-ne ce aveți <em class="italic-serif text-oak-300">nevoie</em>'
+    text="Cel mai simplu e un mesaj pe WhatsApp cu două-trei poze ale camerei. Din ele înțelegem mai mult decât din orice descriere."
+    image="stock/bucatarii/03"
+    crumbs={[{ name: 'Acasă', href: url('/') }, { name: 'Contact' }]}
+  />
+
+  <section class="bg-bone-100 py-20 md:py-28">
+    <div class="container-x">
+      <div class="grid gap-px overflow-hidden rounded-[1.5rem] bg-walnut-900/10 sm:grid-cols-2 lg:grid-cols-4">
+        <a href={site.phoneHref} class="group bg-bone-100 p-8 transition-colors duration-500 hover:bg-bone-200" data-reveal>
+          <Phone size={22} stroke-width={1.5} class="text-oak-600" />
+          <p class="mt-5 text-[0.62rem] font-bold uppercase tracking-[0.2em] text-muted">Telefon</p>
+          <p class="mt-2 font-serif text-xl text-walnut-900">{site.phone}</p>
+        </a>
+        <a href={site.whatsapp} target="_blank" rel="noopener" class="group bg-bone-100 p-8 transition-colors duration-500 hover:bg-bone-200" data-reveal data-delay="0.05">
+          <MessageCircle size={22} stroke-width={1.5} class="text-[#25d366]" />
+          <p class="mt-5 text-[0.62rem] font-bold uppercase tracking-[0.2em] text-muted">WhatsApp</p>
+          <p class="mt-2 font-serif text-xl text-walnut-900">Trimiteți poze</p>
+        </a>
+        <a href={`mailto:${site.email}`} class="group bg-bone-100 p-8 transition-colors duration-500 hover:bg-bone-200" data-reveal data-delay="0.1">
+          <Mail size={22} stroke-width={1.5} class="text-oak-600" />
+          <p class="mt-5 text-[0.62rem] font-bold uppercase tracking-[0.2em] text-muted">Email</p>
+          <p class="mt-2 break-all font-serif text-lg text-walnut-900">{site.email}</p>
+        </a>
+        <a href={mapsLink} target="_blank" rel="noopener" class="group bg-bone-100 p-8 transition-colors duration-500 hover:bg-bone-200" data-reveal data-delay="0.15">
+          <MapPin size={22} stroke-width={1.5} class="text-oak-600" />
+          <p class="mt-5 text-[0.62rem] font-bold uppercase tracking-[0.2em] text-muted">Atelier</p>
+          <p class="mt-2 font-serif text-lg leading-snug text-walnut-900">{fullAddress}</p>
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <section class="bg-bone-100 pb-20 md:pb-28">
+    <div class="container-x grid gap-14 lg:grid-cols-12">
+      <div class="lg:col-span-4">
+        <SectionHeading
+          eyebrow="Cerere de ofertă"
+          title='Completați <em class="italic-serif">formularul</em>'
+          text="Sau, dacă vă e mai comod, sunați. Nu avem robot și nu vă pune nimeni în așteptare."
+          size="md"
+        />
+
+        <div class="mt-10 rounded-[1.5rem] bg-bone-200/70 p-7" data-reveal>
+          <p class="flex items-center gap-2 text-[0.62rem] font-bold uppercase tracking-[0.2em] text-oak-600">
+            <Clock size={13} /> Program
+          </p>
+          <ul class="mt-5 space-y-2 text-sm">
+            {
+              site.hours.map((h) => (
+                <li class="flex justify-between gap-4 border-b border-walnut-900/10 pb-2 last:border-0">
+                  <span class="text-muted">{h.days}</span>
+                  <span class="font-semibold text-walnut-900">{h.time}</span>
+                </li>
+              ))
+            }
+          </ul>
+        </div>
+
+        <div class="mt-6 rounded-[1.5rem] border border-walnut-900/12 p-7" data-reveal data-delay="0.1">
+          <p class="text-[0.62rem] font-bold uppercase tracking-[0.2em] text-oak-600">Ce urmează</p>
+          <ol class="mt-5 space-y-4">
+            {
+              steps.slice(0, 3).map((s) => (
+                <li class="flex gap-4">
+                  <span class="font-serif text-xl text-oak-500">{s.n}</span>
+                  <div>
+                    <p class="font-serif text-lg leading-tight text-walnut-900">{s.title}</p>
+                    <p class="mt-1 text-xs text-muted">{s.duration}</p>
+                  </div>
+                </li>
+              ))
+            }
+          </ol>
+          <a href={url('/proces')} class="arrow-link mt-6 text-walnut-800">Procesul complet <ArrowRight size={14} /></a>
+        </div>
+      </div>
+
+      <div class="lg:col-span-7 lg:col-start-6">
+        <div class="rounded-[1.75rem] bg-bone-50 p-8 md:p-12" data-reveal>
+          <QuoteForm />
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="bg-bone-200/60 py-20 md:py-28">
+    <div class="container-x">
+      <SectionHeading eyebrow="Atelierul" title='Ne găsiți în <em class="italic-serif">Pârjol</em>' size="md" />
+      <p class="lead mt-7 max-w-2xl" data-reveal>
+        Puteți trece fără programare, în timpul programului. Vedeți lemnul pe bancul de lucru și alegeți
+        finisajele în fața plăcilor reale.
+      </p>
+      <div class="mt-12 overflow-hidden rounded-[1.5rem] border border-walnut-900/10" data-reveal>
+        <iframe
+          src={mapsEmbed}
+          title="Harta atelierului Hanu Tâmplaru', Pârjol, județul Bacău"
+          loading="lazy"
+          referrerpolicy="no-referrer-when-downgrade"
+          class="h-[400px] w-full md:h-[520px]"
+          allowfullscreen
+        ></iframe>
+      </div>
+    </div>
+  </section>
+
+  <section class="bg-bone-100 py-20 md:py-28">
+    <div class="container-x grid gap-14 lg:grid-cols-12">
+      <div class="lg:col-span-4">
+        <SectionHeading eyebrow="Înainte să sunați" title='Poate găsiți răspunsul <em class="italic-serif">aici</em>' size="md" />
+        <a href={url('/intrebari-frecvente')} class="arrow-link mt-8 text-walnut-800" data-reveal>
+          Toate întrebările <ArrowRight size={16} />
+        </a>
+      </div>
+      <div class="lg:col-span-7 lg:col-start-6">
+        <FaqAccordion items={faq.slice(0, 5)} />
+      </div>
+    </div>
+  </section>
+</BaseLayout>

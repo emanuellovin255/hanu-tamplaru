@@ -1,0 +1,109 @@
+---
+import '../styles/global.css';
+import type { ImageMetadata } from 'astro';
+import { getImage } from 'astro:assets';
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+import MobileCTA from '../components/MobileCTA.astro';
+import { site } from '../data/site';
+import { localBusiness } from '../lib/seo';
+import { photo } from '../lib/photos';
+import { url } from '../lib/url';
+
+interface Props {
+  /** Titlul paginii, fără numele firmei (se adaugă automat). */
+  title?: string;
+  description?: string;
+  image?: ImageMetadata;
+  intro?: boolean;
+  /** Scheme JSON-LD suplimentare, specifice paginii. */
+  schemas?: Record<string, unknown>[];
+  noindex?: boolean;
+}
+
+const {
+  title,
+  description = site.metaDescription,
+  image = photo('stock/atmosfera/01'),
+  intro = false,
+  schemas = [],
+  noindex = false,
+} = Astro.props;
+
+// Titlul cu brand, dacă încape în ~60 de caractere; altfel doar titlul paginii.
+const withBrand = `${title} | ${site.name}`;
+const fullTitle = title
+  ? withBrand.length <= 60
+    ? withBrand
+    : title
+  : `${site.name} – Mobilă la comandă în județul Bacău`;
+
+const og = await getImage({ src: image, width: 1200, height: 630, fit: 'cover', format: 'jpg' });
+const canonical = new URL(Astro.url.pathname, Astro.site);
+const ogImage = new URL(og.src, Astro.site);
+const origin = new URL(url('/'), Astro.site).href;
+
+const allSchemas = [localBusiness(origin, ogImage.href), ...schemas];
+---
+
+<!doctype html>
+<html lang="ro" class="no-js">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <title>{fullTitle}</title>
+    <meta name="description" content={description} />
+    <link rel="canonical" href={canonical} />
+    <link rel="icon" type="image/svg+xml" href={url('/favicon.svg')} />
+    <link rel="sitemap" href={url('/sitemap.xml')} />
+    <meta name="theme-color" content="#1d1713" />
+    <meta name="author" content={site.name} />
+    <meta name="geo.region" content="RO-BC" />
+    <meta name="geo.placename" content="Pârjol, Bacău" />
+    {noindex && <meta name="robots" content="noindex, follow" />}
+
+    <meta property="og:type" content="website" />
+    <meta property="og:locale" content="ro_RO" />
+    <meta property="og:site_name" content={site.name} />
+    <meta property="og:title" content={fullTitle} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonical} />
+    <meta property="og:image" content={ogImage} />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content={fullTitle} />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={fullTitle} />
+    <meta name="twitter:description" content={description} />
+    <meta name="twitter:image" content={ogImage} />
+
+    <script is:inline src={url('/init.js')}></script>
+    {allSchemas.map((schema) => <script type="application/ld+json" set:html={JSON.stringify(schema)} />)}
+  </head>
+  <body>
+    <a href="#main" class="skip-link">Sari la conținut</a>
+
+    {
+      intro && (
+        <div class="intro-curtain fixed inset-0 z-[90] flex items-center justify-center bg-walnut-950 text-bone-50" aria-hidden="true">
+          <div class="overflow-hidden">
+            <p class="intro-word font-serif text-5xl tracking-[-0.03em] md:text-7xl">
+              Hanu <span class="italic-serif text-oak-300">Tâmplaru'</span>
+            </p>
+          </div>
+        </div>
+      )
+    }
+
+    <Header />
+    <main id="main" tabindex="-1">
+      <slot />
+    </main>
+    <Footer />
+    <MobileCTA />
+
+    <script>
+      import '../scripts/motion.ts';
+    </script>
+  </body>
+</html>

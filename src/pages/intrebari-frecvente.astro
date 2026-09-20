@@ -1,0 +1,94 @@
+---
+import { ArrowRight, Phone, MessageCircle } from '@lucide/astro';
+import BaseLayout from '../layouts/BaseLayout.astro';
+import PageHero from '../components/PageHero.astro';
+import SectionHeading from '../components/SectionHeading.astro';
+import FaqAccordion from '../components/FaqAccordion.astro';
+import CTASection from '../components/CTASection.astro';
+import { faq } from '../data/faq';
+import { products } from '../data/products';
+import { site } from '../data/site';
+import { photo } from '../lib/photos';
+import { url } from '../lib/url';
+import { breadcrumbs, faqPage } from '../lib/seo';
+
+/** Toate întrebările generale + cele de pe paginile de produs, grupate. */
+const groups = [
+  { title: 'Generale', items: faq },
+  ...products.map((p) => ({ title: p.name, items: p.faq, slug: p.slug })),
+];
+
+const allFaq = groups.flatMap((g) => g.items);
+
+const origin = new URL(url('/'), Astro.site).href;
+const pageUrl = new URL(url('/intrebari-frecvente'), Astro.site).href;
+
+const schemas = [
+  breadcrumbs([{ name: 'Acasă', url: origin }, { name: 'Întrebări frecvente', url: pageUrl }]),
+  faqPage(allFaq),
+];
+---
+
+<BaseLayout
+  title="Întrebări frecvente"
+  description="Răspunsuri la întrebările pe care le primim cel mai des: prețuri, termene, avans, garanție, montaj, materiale și zone de lucru în județul Bacău."
+  image={photo('stock/bucatarii/02')}
+  schemas={schemas}
+>
+  <PageHero
+    eyebrow="Întrebări frecvente"
+    title='Tot ce ne <em class="italic-serif text-oak-300">întreabă lumea</em>'
+    text={`${allFaq.length} răspunsuri, grupate pe teme. Dacă nu găsiți ce căutați, sunați-ne — răspundem și dacă întrebarea e „nu știu de unde să încep".`}
+    image="stock/bucatarii/02"
+    crumbs={[{ name: 'Acasă', href: url('/') }, { name: 'Întrebări frecvente' }]}
+  />
+
+  <section class="bg-bone-100 py-20 md:py-28">
+    <div class="container-x grid gap-14 lg:grid-cols-12">
+      <aside class="lg:col-span-3">
+        <div class="sticky top-28">
+          <p class="text-[0.62rem] font-bold uppercase tracking-[0.2em] text-oak-600">Teme</p>
+          <ul class="mt-5 space-y-2 text-sm" data-reveal>
+            {
+              groups.map((g) => (
+                <li>
+                  <a href={`#faq-${g.slug ?? 'generale'}`} class="link-underline text-walnut-900">{g.title}</a>
+                </li>
+              ))
+            }
+          </ul>
+          <div class="mt-10 rounded-[1.5rem] bg-walnut-900 p-7 text-bone-50" data-reveal>
+            <p class="font-serif text-xl leading-tight">Nu găsiți răspunsul?</p>
+            <p class="mt-3 text-sm text-bone-100/70">Sunați sau scrieți-ne pe WhatsApp. Răspundem în aceeași zi.</p>
+            <a href={site.phoneHref} class="btn btn-oak mt-6 w-full">
+              <Phone size={15} /> {site.phone}
+            </a>
+            <a href={site.whatsapp} target="_blank" rel="noopener" class="btn btn-ghost-light mt-3 w-full">
+              <MessageCircle size={15} /> WhatsApp
+            </a>
+          </div>
+        </div>
+      </aside>
+
+      <div class="lg:col-span-8 lg:col-start-5">
+        {
+          groups.map((g, i) => (
+            <section id={`faq-${g.slug ?? 'generale'}`} class:list={['scroll-mt-28', i > 0 && 'mt-20']}>
+              <div class="flex items-end justify-between gap-6">
+                <h2 class="display-sm font-serif text-walnut-900" data-split>{g.title}</h2>
+                {g.slug && (
+                  <a href={url(`/servicii/${g.slug}`)} class="arrow-link shrink-0 text-walnut-800" data-reveal>
+                    Pagina <ArrowRight size={14} />
+                  </a>
+                )}
+              </div>
+              <FaqAccordion items={g.items} class="mt-8" />
+            </section>
+          ))
+        }
+      </div>
+    </div>
+  </section>
+
+  <CTASection />
+</BaseLayout>

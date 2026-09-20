@@ -1,0 +1,26 @@
+---
+import { stats } from '../data/site';
+
+interface Props {
+  class?: string;
+}
+
+const { class: className = '' } = Astro.props;
+---
+
+<section class:list={['bg-bone-100', className]}>
+  <div class="container-x">
+    <div class="grid grid-cols-2 gap-px overflow-hidden rounded-[1.75rem] bg-walnut-900/10 lg:grid-cols-4">
+      {
+        stats.map((s, i) => (
+          <div class="bg-bone-100 px-5 py-10 md:px-10 md:py-14" data-reveal data-delay={i * 0.06}>
+            <p class="font-serif text-[clamp(2.8rem,6vw,5.2rem)] leading-none tracking-[-0.04em] text-walnut-800">
+              <span data-count={s.value}>{s.value}</span><span class="text-oak-500">{s.suffix}</span>
+            </p>
+            <p class="mt-4 max-w-[16rem] text-sm leading-snug text-muted">{s.label}</p>
+          </div>
+        ))
+      }
+    </div>
+  </div>
+</section>

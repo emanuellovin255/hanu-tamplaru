@@ -1,0 +1,32 @@
+---
+interface Props {
+  words: string[];
+  class?: string;
+}
+
+const { words, class: className = '' } = Astro.props;
+const row = [...words, ...words];
+---
+
+<div class:list={['relative overflow-hidden py-10 md:py-14', className]} aria-hidden="true">
+  <div class="marquee-track flex w-max items-center">
+    {
+      [0, 1].map(() => (
+        <div class="flex items-center">
+          {row.map((w) => (
+            <span class="flex items-center">
+              <span class="whitespace-nowrap px-6 font-serif text-[clamp(2.6rem,7vw,6.5rem)] leading-none tracking-[-0.03em] md:px-10">
+                {w}
+              </span>
+              <svg viewBox="0 0 24 24" class="h-5 w-5 shrink-0 text-oak-500 md:h-8 md:w-8" fill="none" stroke="currentColor" stroke-width="1.4">
+                <circle cx="12" cy="12" r="2.4" />
+                <circle cx="12" cy="12" r="6.2" stroke-opacity="0.7" />
+                <circle cx="12" cy="12" r="10.4" stroke-opacity="0.4" />
+              </svg>
+            </span>
+          ))}
+        </div>
+      ))
+    }
+  </div>
+</div>

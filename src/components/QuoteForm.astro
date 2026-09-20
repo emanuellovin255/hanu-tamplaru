@@ -1,0 +1,159 @@
+---
+import { ArrowRight, MessageCircle } from '@lucide/astro';
+import { site } from '../data/site';
+import { products } from '../data/products';
+import { areas } from '../data/areas';
+
+interface Props {
+  /** Preselectează tipul de proiect, ex. 'bucatarii'. */
+  preselect?: string;
+  class?: string;
+}
+
+const { preselect = '', class: className = '' } = Astro.props;
+const hasEndpoint = !!site.formEndpoint;
+---
+
+<form
+  class:list={['grid gap-7 sm:grid-cols-2', className]}
+  data-quote-form
+  data-endpoint={site.formEndpoint}
+  data-whatsapp={site.whatsapp}
+  method="post"
+  action={site.formEndpoint || undefined}
+  novalidate
+>
+  {hasEndpoint && <input type="hidden" name="access_key" value={site.formEndpoint} />}
+  <input type="hidden" name="subject" value="Cerere de ofertă de pe site" />
+  <p class="hidden" aria-hidden="true">
+    <label>Lăsați gol <input type="text" name="botcheck" tabindex="-1" autocomplete="off" /></label>
+  </p>
+
+  <div class="field">
+    <label for="qf-name">Nume și prenume *</label>
+    <input id="qf-name" name="nume" type="text" required autocomplete="name" placeholder="Ion Popescu" />
+  </div>
+
+  <div class="field">
+    <label for="qf-phone">Telefon *</label>
+    <input id="qf-phone" name="telefon" type="tel" required autocomplete="tel" placeholder="07xx xxx xxx" />
+  </div>
+
+  <div class="field">
+    <label for="qf-email">Email</label>
+    <input id="qf-email" name="email" type="email" autocomplete="email" placeholder="opțional" />
+  </div>
+
+  <div class="field">
+    <label for="qf-city">Localitate</label>
+    <input id="qf-city" name="localitate" type="text" list="qf-localitati" placeholder="Bacău" />
+    <datalist id="qf-localitati">
+      {areas.map((a) => <option value={a.name} />)}
+    </datalist>
+  </div>
+
+  <div class="field sm:col-span-2">
+    <label for="qf-type">Ce aveți nevoie? *</label>
+    <select id="qf-type" name="proiect" required>
+      <option value="">Alegeți din listă</option>
+      {products.map((p) => <option value={p.name} selected={p.slug === preselect}>{p.name}</option>)}
+      <option value="Amenajare completă">Amenajare completă (mai multe camere)</option>
+      <option value="Altceva">Altceva / nu știu încă</option>
+    </select>
+  </div>
+
+  <div class="field sm:col-span-2">
+    <label for="qf-message">Detalii despre proiect</label>
+    <textarea
+      id="qf-message"
+      name="mesaj"
+      placeholder="Dimensiuni aproximative, culori care vă plac, termenul până la care aveți nevoie de lucrare…"
+    ></textarea>
+  </div>
+
+  <div class="sm:col-span-2">
+    <label class="flex cursor-pointer items-start gap-3 text-sm text-muted">
+      <input type="checkbox" name="acord" required class="mt-1 h-4 w-4 shrink-0 accent-[var(--color-oak-500)]" />
+      <span>Sunt de acord să fiu contactat telefonic sau pe WhatsApp în legătură cu această cerere.</span>
+    </label>
+  </div>
+
+  <div class="flex flex-wrap items-center gap-4 sm:col-span-2">
+    <button type="submit" class="btn btn-dark" data-submit>
+      <span data-submit-label>Trimite cererea</span>
+      <ArrowRight size={16} />
+    </button>
+    <a href={site.whatsapp} target="_blank" rel="noopener" class="btn btn-whatsapp">
+      <MessageCircle size={16} /> Direct pe WhatsApp
+    </a>
+  </div>
+
+  <p class="text-sm text-muted sm:col-span-2" data-form-status role="status" aria-live="polite">
+    Răspundem în aceeași zi lucrătoare. Măsurătorile sunt gratuite în județul Bacău.
+  </p>
+</form>
+
+<script>
+  document.querySelectorAll<HTMLFormElement>('[data-quote-form]').forEach((form) => {
+    const status = form.querySelector<HTMLElement>('[data-form-status]');
+    const button = form.querySelector<HTMLButtonElement>('[data-submit]');
+    const label = form.querySelector<HTMLElement>('[data-submit-label]');
+    const endpoint = form.dataset.endpoint;
+    const whatsapp = form.dataset.whatsapp || '';
+
+    const say = (text: string, ok = false) => {
+      if (!status) return;
+      status.textContent = text;
+      status.className = `text-sm sm:col-span-2 ${ok ? 'text-[color:var(--color-sage-600)]' : 'text-muted'}`;
+    };
+
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      if ((form.querySelector<HTMLInputElement>('[name="botcheck"]')?.value || '') !== '') return;
+
+      if (!form.checkValidity()) {
+        form.reportValidity();
+        say('Completați câmpurile marcate cu *.');
+        return;
+      }
+
+      const data = new FormData(form);
+      const get = (k: string) => String(data.get(k) || '').trim();
+
+      // Fără endpoint configurat, cererea pleacă pe WhatsApp, cu tot ce ați completat.
+      if (!endpoint) {
+        const lines = [
+          'Bună ziua! Aș vrea o ofertă.',
+          '',
+          `Nume: ${get('nume')}`,
+          `Telefon: ${get('telefon')}`,
+          get('email') && `Email: ${get('email')}`,
+          get('localitate') && `Localitate: ${get('localitate')}`,
+          `Proiect: ${get('proiect')}`,
+          get('mesaj') && `Detalii: ${get('mesaj')}`,
+        ].filter(Boolean);
+        window.open(`${whatsapp}?text=${encodeURIComponent(lines.join('\n'))}`, '_blank', 'noopener');
+        say('V-am deschis WhatsApp cu cererea completată. Apăsați „trimite" în aplicație.', true);
+        return;
+      }
+
+      if (button) button.disabled = true;
+      if (label) label.textContent = 'Se trimite…';
+      try {
+        const res = await fetch('https://api.web3forms.com/submit', {
+          method: 'POST',
+          headers: { Accept: 'application/json' },
+          body: data,
+        });
+        if (!res.ok) throw new Error(String(res.status));
+        form.reset();
+        say('Am primit cererea. Vă sunăm în cel mult o zi lucrătoare.', true);
+        if (label) label.textContent = 'Trimis';
+      } catch {
+        say('Nu am putut trimite formularul. Sunați-ne la 0721 067 743 sau scrieți-ne pe WhatsApp.');
+        if (button) button.disabled = false;
+        if (label) label.textContent = 'Încearcă din nou';
+      }
+    });
+  });
+</script>

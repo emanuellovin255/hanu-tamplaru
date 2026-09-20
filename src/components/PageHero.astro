@@ -1,0 +1,40 @@
+---
+import { Image } from 'astro:assets';
+import Breadcrumbs from './Breadcrumbs.astro';
+import { photo } from '../lib/photos';
+
+interface Props {
+  eyebrow?: string;
+  title: string;
+  text?: string;
+  image: string;
+  crumbs: { name: string; href?: string }[];
+  align?: 'left' | 'center';
+  size?: 'lg' | 'md';
+}
+
+const { eyebrow, title, text, image, crumbs, align = 'left', size = 'lg' } = Astro.props;
+const img = photo(image);
+---
+
+<section class="relative flex min-h-[74svh] items-end overflow-hidden bg-walnut-900 text-white md:min-h-[82svh]">
+  <div class="absolute inset-x-0 -top-[10%] h-[120%]" data-parallax="8">
+    <Image src={img} alt={title} widths={[768, 1280, 1920]} sizes="100vw" loading="eager" fetchpriority="high" class="img-cover" />
+  </div>
+  <div class="absolute inset-0 bg-gradient-to-t from-walnut-950 via-walnut-950/45 to-walnut-950/45"></div>
+  <div class="absolute inset-0 bg-gradient-to-r from-walnut-950/55 to-transparent"></div>
+
+  <div class:list={['container-x relative pb-14 pt-40 md:pb-20', align === 'center' && 'text-center']} data-hero-fade>
+    <Breadcrumbs items={crumbs} light class:list={[align === 'center' && 'justify-center']} />
+    {eyebrow && <p class:list={['eyebrow eyebrow-light mt-8', align === 'center' && 'justify-center']}>{eyebrow}</p>}
+    <h1 class:list={[size === 'lg' ? 'display-lg' : 'display-md', 'mt-6 max-w-5xl', align === 'center' && 'mx-auto']} data-split="hero" set:html={title} />
+    {
+      text && (
+        <p class:list={['mt-8 max-w-2xl text-lg leading-relaxed text-white/85 md:text-xl', align === 'center' && 'mx-auto']} data-reveal>
+          {text}
+        </p>
+      )
+    }
+    <slot />
+  </div>
+</section>

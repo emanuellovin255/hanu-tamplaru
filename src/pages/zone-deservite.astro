@@ -1,0 +1,139 @@
+---
+import { ArrowUpRight, ArrowRight, MapPin } from '@lucide/astro';
+import BaseLayout from '../layouts/BaseLayout.astro';
+import PageHero from '../components/PageHero.astro';
+import SectionHeading from '../components/SectionHeading.astro';
+import CTASection from '../components/CTASection.astro';
+import { areas, otherLocalities } from '../data/areas';
+import { mapsEmbed, mapsLink } from '../data/site';
+import { photo } from '../lib/photos';
+import { url } from '../lib/url';
+import { breadcrumbs, itemList, faqPage } from '../lib/seo';
+
+const origin = new URL(url('/'), Astro.site).href;
+const pageUrl = new URL(url('/zone-deservite'), Astro.site).href;
+
+const pageFaq = [
+  { q: 'Deplasarea pentru măsurători costă ceva?', a: 'Nu, în tot județul Bacău măsurătorile și proiectul sunt gratuite, indiferent dacă acceptați sau nu oferta.' },
+  { q: 'Lucrați și în afara județului Bacău?', a: 'Da, pentru proiecte mai mari ne deplasăm și în Neamț, Vaslui sau Vrancea. În acest caz se tarifează doar deplasarea, nu și proiectul.' },
+  { q: 'Cât durează până ajungeți la măsurători?', a: 'De regulă 1–3 zile de la primul telefon. În Pârjol și în comunele vecine, deseori în aceeași zi.' },
+];
+
+const schemas = [
+  breadcrumbs([{ name: 'Acasă', url: origin }, { name: 'Zone deservite', url: pageUrl }]),
+  itemList(
+    'Localități deservite în județul Bacău',
+    areas.map((a) => ({ name: a.name, url: new URL(url(`/mobila-la-comanda/${a.slug}`), Astro.site).href })),
+  ),
+  faqPage(pageFaq),
+];
+---
+
+<BaseLayout
+  title="Zone deservite în județul Bacău"
+  description="Lucrăm în tot județul Bacău: Bacău, Onești, Moinești, Comănești, Buhuși, Târgu Ocna, Dărmănești, Pârjol și comunele din jur. Măsurători gratuite."
+  image={photo('stock/atmosfera/01')}
+  schemas={schemas}
+>
+  <PageHero
+    eyebrow="Zone deservite"
+    title='Tot județul <em class="italic-serif text-oak-300">Bacău</em>'
+    text="Atelierul e în Pârjol, dar lucrările ies în toate colțurile județului. Măsurătorile și montajul sunt incluse, indiferent de localitate."
+    image="stock/atmosfera/01"
+    crumbs={[{ name: 'Acasă', href: url('/') }, { name: 'Zone deservite' }]}
+  />
+
+  <section class="bg-bone-100 py-20 md:py-28">
+    <div class="container-x">
+      <SectionHeading
+        eyebrow="Orașe"
+        title='Pagini dedicate pentru <em class="italic-serif">fiecare oraș</em>'
+        text="Fiecare localitate are particularitățile ei — fond locativ, dimensiuni de cameră, ce se cere cel mai des. Am scris despre fiecare separat."
+        size="md"
+      />
+      <div class="mt-16 grid gap-px overflow-hidden rounded-[1.5rem] bg-walnut-900/10 md:grid-cols-2">
+        {
+          areas.map((a, i) => (
+            <a
+              href={url(`/mobila-la-comanda/${a.slug}`)}
+              class="group bg-bone-100 p-8 transition-colors duration-500 hover:bg-bone-200 md:p-10"
+              data-reveal
+              data-delay={Math.min(i, 7) * 0.04}
+            >
+              <div class="flex items-start justify-between gap-6">
+                <div>
+                  <h2 class="font-serif text-[1.9rem] leading-tight text-walnut-900">{a.name}</h2>
+                  <p class="mt-1 text-xs text-muted">{a.population} · {a.distance}</p>
+                </div>
+                <ArrowUpRight size={20} class="mt-1 shrink-0 text-oak-600 transition-transform duration-500 group-hover:rotate-45" />
+              </div>
+              <p class="mt-5 text-sm leading-relaxed text-muted">{a.intro}</p>
+              <p class="mt-5 text-[0.62rem] font-bold uppercase tracking-[0.16em] text-oak-600">{a.demand}</p>
+            </a>
+          ))
+        }
+      </div>
+    </div>
+  </section>
+
+  <section class="bg-bone-200/60 py-20 md:py-28">
+    <div class="container-x grid gap-14 lg:grid-cols-12">
+      <div class="lg:col-span-5">
+        <SectionHeading
+          eyebrow="Comune și sate"
+          title='Ne deplasăm și <em class="italic-serif">aici</em>'
+          text="Lista de mai jos nu e exhaustivă. Dacă localitatea dumneavoastră e în județul Bacău, venim."
+          size="md"
+        />
+        <div class="mt-10 flex flex-wrap gap-4" data-reveal>
+          <a href={url('/contact')} class="btn btn-dark">Cere ofertă <ArrowRight size={16} /></a>
+          <a href={mapsLink} target="_blank" rel="noopener" class="btn btn-ghost-dark">
+            <MapPin size={15} /> Vezi pe hartă
+          </a>
+        </div>
+      </div>
+      <div class="lg:col-span-7">
+        <ul class="flex flex-wrap gap-2" data-reveal>
+          {
+            otherLocalities.map((n) => (
+              <li class="rounded-full border border-walnut-900/15 bg-bone-100 px-4 py-2 text-sm text-walnut-900">{n}</li>
+            ))
+          }
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <section class="bg-bone-100 pb-20 md:pb-28">
+    <div class="container-x">
+      <div class="overflow-hidden rounded-[1.5rem] border border-walnut-900/10" data-reveal>
+        <iframe
+          src={mapsEmbed}
+          title="Zona deservită de Hanu Tâmplaru' — județul Bacău"
+          loading="lazy"
+          referrerpolicy="no-referrer-when-downgrade"
+          class="h-[400px] w-full md:h-[520px]"
+          allowfullscreen
+        ></iframe>
+      </div>
+    </div>
+  </section>
+
+  <section class="bg-bone-200/60 py-20 md:py-28">
+    <div class="container-x">
+      <SectionHeading eyebrow="Întrebări" title='Despre <em class="italic-serif">deplasări</em>' size="md" />
+      <dl class="mt-12 border-t border-walnut-900/10">
+        {
+          pageFaq.map((f, i) => (
+            <div class="border-b border-walnut-900/10 py-7" data-reveal data-delay={i * 0.04}>
+              <dt class="font-serif text-[1.3rem] leading-snug text-walnut-900">{f.q}</dt>
+              <dd class="mt-3 max-w-3xl leading-relaxed text-muted">{f.a}</dd>
+            </div>
+          ))
+        }
+      </dl>
+    </div>
+  </section>
+
+  <CTASection />
+</BaseLayout>

@@ -1,0 +1,217 @@
+---
+import { ArrowRight, MapPin, Users, Route, Phone, MessageCircle } from '@lucide/astro';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import PageHero from '../../components/PageHero.astro';
+import ProductCard from '../../components/ProductCard.astro';
+import SectionHeading from '../../components/SectionHeading.astro';
+import QuoteForm from '../../components/QuoteForm.astro';
+import FaqAccordion from '../../components/FaqAccordion.astro';
+import { areas, type Area } from '../../data/areas';
+import { products } from '../../data/products';
+import { site } from '../../data/site';
+import { faq } from '../../data/faq';
+import { photo } from '../../lib/photos';
+import { url } from '../../lib/url';
+import { serviceSchema, breadcrumbs, faqPage } from '../../lib/seo';
+
+export function getStaticPaths() {
+  return areas.map((area) => ({ params: { slug: area.slug }, props: { area } }));
+}
+
+interface Props {
+  area: Area;
+}
+
+const { area } = Astro.props;
+const heroImages = ['stock/atmosfera/01', 'stock/bucatarii/02', 'stock/atmosfera/04', 'stock/bucatarii/03'];
+const heroImage = heroImages[areas.findIndex((a) => a.slug === area.slug) % heroImages.length];
+
+const others = areas.filter((a) => a.slug !== area.slug);
+const origin = new URL(url('/'), Astro.site).href;
+const pageUrl = new URL(url(`/mobila-la-comanda/${area.slug}`), Astro.site).href;
+
+const localFaq = [
+  {
+    q: `Veniți la măsurători ${area.inName === 'Pârjol' ? 'în Pârjol' : `în ${area.name}`}?`,
+    a: `Da, iar deplasarea pentru măsurători e gratuită. ${area.distance === 'aici e atelierul' ? 'Atelierul e chiar în Pârjol, deci venim în ziua în care ne sunați.' : `Suntem la ${area.distance}, așa că programăm vizita în una-două zile de la primul telefon.`}`,
+  },
+  {
+    q: `Montajul e inclus dacă locuiesc ${area.inName === 'Pârjol' ? 'în Pârjol' : `în ${area.name}`}?`,
+    a: 'Da. Transportul și montajul sunt incluse în ofertă pentru tot județul Bacău, fără costuri suplimentare.',
+  },
+  ...faq.slice(1, 5),
+];
+
+const schemas = [
+  serviceSchema({
+    origin,
+    url: pageUrl,
+    name: `Mobilă la comandă ${area.inName}`,
+    description: area.metaDescription,
+    image: new URL(photo(heroImage).src, Astro.site).href,
+    serviceType: 'Mobilă la comandă',
+  }),
+  breadcrumbs([
+    { name: 'Acasă', url: origin },
+    { name: 'Mobilă la comandă', url: new URL(url('/mobila-la-comanda'), Astro.site).href },
+    { name: area.name, url: pageUrl },
+  ]),
+  faqPage(localFaq),
+];
+---
+
+<BaseLayout
+  title={`Mobilă la comandă ${area.inName}`}
+  description={area.metaDescription}
+  image={photo(heroImage)}
+  schemas={schemas}
+>
+  <PageHero
+    eyebrow={`Județul Bacău · ${area.name}`}
+    title={`Mobilă la comandă <em class="italic-serif text-oak-300">${area.inName}</em>`}
+    text={area.intro}
+    image={heroImage}
+    crumbs={[
+      { name: 'Acasă', href: url('/') },
+      { name: 'Mobilă la comandă', href: url('/mobila-la-comanda') },
+      { name: area.name },
+    ]}
+  />
+
+  <section class="bg-bone-100 py-16 md:py-20">
+    <div class="container-x">
+      <div class="grid gap-px overflow-hidden rounded-[1.5rem] bg-walnut-900/10 sm:grid-cols-3">
+        {
+          [
+            { icon: Users, label: 'Localitate', value: area.population },
+            { icon: Route, label: 'Distanța de atelier', value: area.distance },
+            { icon: MapPin, label: 'Se cere cel mai des', value: area.demand },
+          ].map((item, i) => (
+            <div class="bg-bone-100 p-7 md:p-8" data-reveal data-delay={i * 0.05}>
+              <item.icon size={20} stroke-width={1.5} class="text-oak-600" />
+              <p class="mt-4 text-[0.62rem] font-bold uppercase tracking-[0.2em] text-muted">{item.label}</p>
+              <p class="mt-2 font-serif text-xl leading-snug text-walnut-900">{item.value}</p>
+            </div>
+          ))
+        }
+      </div>
+    </div>
+  </section>
+
+  <section class="bg-bone-100 pb-20 md:pb-28">
+    <div class="container-x grid gap-16 lg:grid-cols-12">
+      <div class="prose-wood lg:col-span-7">
+        <h2 class="font-serif text-[clamp(1.6rem,2.6vw,2.2rem)] leading-tight text-walnut-900" data-reveal>
+          Ce facem {area.inName === 'Pârjol' ? 'în Pârjol' : `în ${area.name}`}
+        </h2>
+        <div data-reveal>{area.context.map((p) => <p set:html={p} />)}</div>
+
+        <div data-reveal>
+          <h3>Cartierele și zonele în care am lucrat</h3>
+          <ul class="!mt-5 !flex !flex-wrap !gap-2">
+            {
+              area.neighbourhoods.map((n) => (
+                <li class="!m-0 !inline-flex !p-0 !pl-0 rounded-full border border-walnut-900/15 px-4 py-2 text-sm !text-walnut-900 before:!hidden">
+                  {n}
+                </li>
+              ))
+            }
+          </ul>
+        </div>
+
+        <div data-reveal>
+          <h3>Cum decurge o lucrare</h3>
+          <p>
+            Ne sunați sau ne scrieți pe WhatsApp, iar dacă aveți poze cu spațiul, le trimiteți odată cu
+            mesajul. Stabilim o oră pentru măsurători și venim
+            {area.distance === 'aici e atelierul' ? ' în aceeași zi sau a doua zi' : ` — suntem la ${area.distance}`}.
+            În 3–5 zile primiți proiectul desenat și oferta detaliată pe poziții.
+          </p>
+          <p>
+            După ce aprobați proiectul, intră în producție. Montajul îl facem cu echipa noastră, într-o
+            singură deplasare, și plecăm cu ambalajele. Aveți mai multe detalii în
+            <a href={url('/proces')}>pagina despre procesul de lucru</a>.
+          </p>
+        </div>
+      </div>
+
+      <aside class="lg:col-span-4 lg:col-start-9">
+        <div class="sticky top-28 space-y-6">
+          <div class="rounded-[1.5rem] bg-walnut-900 p-8 text-bone-50" data-reveal>
+            <p class="text-[0.62rem] font-bold uppercase tracking-[0.2em] text-bone-100/70">
+              Ofertă pentru {area.name}
+            </p>
+            <p class="mt-3 font-serif text-[1.8rem] leading-tight">
+              Măsurători <em class="italic-serif text-oak-300">gratuite</em>
+            </p>
+            <p class="mt-4 text-sm leading-relaxed text-bone-100/70">
+              Fără cost, fără obligații și fără condiție de comandă. Dacă oferta nu vă convine, rămâneți
+              măcar cu măsurătorile.
+            </p>
+            <a href={site.phoneHref} class="btn btn-oak mt-8 w-full">
+              <Phone size={15} /> {site.phone}
+            </a>
+            <a href={site.whatsapp} target="_blank" rel="noopener" class="btn btn-ghost-light mt-3 w-full">
+              <MessageCircle size={15} /> WhatsApp
+            </a>
+          </div>
+
+          <div class="rounded-[1.5rem] border border-walnut-900/12 p-7" data-reveal data-delay="0.1">
+            <p class="text-[0.62rem] font-bold uppercase tracking-[0.2em] text-oak-600">Alte localități</p>
+            <ul class="mt-5 space-y-2 text-sm">
+              {
+                others.map((a) => (
+                  <li>
+                    <a href={url(`/mobila-la-comanda/${a.slug}`)} class="link-underline text-walnut-900">
+                      Mobilă la comandă {a.inName}
+                    </a>
+                  </li>
+                ))
+              }
+            </ul>
+          </div>
+        </div>
+      </aside>
+    </div>
+  </section>
+
+  <section class="bg-bone-200/60 py-20 md:py-28">
+    <div class="container-x">
+      <SectionHeading
+        eyebrow="Servicii"
+        title={`Ce puteți comanda ${area.inName === 'Pârjol' ? 'din Pârjol' : `din ${area.name}`}`}
+        size="md"
+      />
+      <div class="mt-14 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+        {products.map((p, i) => <ProductCard product={p} index={i} />)}
+      </div>
+    </div>
+  </section>
+
+  <section class="bg-bone-100 py-20 md:py-28">
+    <div class="container-x grid gap-14 lg:grid-cols-12">
+      <div class="lg:col-span-4">
+        <SectionHeading eyebrow="Întrebări frecvente" title={`Despre lucrările <em class="italic-serif">din ${area.name}</em>`} size="md" />
+      </div>
+      <div class="lg:col-span-7 lg:col-start-6">
+        <FaqAccordion items={localFaq} />
+      </div>
+    </div>
+  </section>
+
+  <section class="bg-bone-200/60 py-20 md:py-28">
+    <div class="container-x grid gap-14 lg:grid-cols-12">
+      <div class="lg:col-span-4">
+        <SectionHeading
+          eyebrow="Cerere de ofertă"
+          title={`Scrieți-ne din <em class="italic-serif">${area.name}</em>`}
+          text="Completați formularul și vă răspundem în aceeași zi lucrătoare."
+          size="md"
+        />
+      </div>
+      <div class="lg:col-span-7 lg:col-start-6">
+        <QuoteForm />
+      </div>
+    </div>
+  </section>
+</BaseLayout>

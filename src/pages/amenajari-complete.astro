@@ -1,0 +1,229 @@
+---
+import { Image } from 'astro:assets';
+import { ArrowRight, Check } from '@lucide/astro';
+import BaseLayout from '../layouts/BaseLayout.astro';
+import PageHero from '../components/PageHero.astro';
+import SectionHeading from '../components/SectionHeading.astro';
+import ProductCard from '../components/ProductCard.astro';
+import FaqAccordion from '../components/FaqAccordion.astro';
+import CTASection from '../components/CTASection.astro';
+import { products, related } from '../data/products';
+import { photo } from '../lib/photos';
+import { url } from '../lib/url';
+import { serviceSchema, breadcrumbs, faqPage } from '../lib/seo';
+
+const origin = new URL(url('/'), Astro.site).href;
+const pageUrl = new URL(url('/amenajari-complete'), Astro.site).href;
+
+const rooms = [
+  {
+    name: 'Bucătăria',
+    text: 'Corpuri croite pe cameră, blat, backsplash, iluminare LED și nișe pentru electrocasnicele pe care le alegeți.',
+    slug: 'bucatarii',
+  },
+  {
+    name: 'Livingul',
+    text: 'Unit TV pe toată lățimea peretelui, bibliotecă, vitrine și panou decorativ cu riflaj și lumină indirectă.',
+    slug: 'mobilier-living',
+  },
+  {
+    name: 'Dormitorul',
+    text: 'Pat din lemn masiv, noptiere asortate și dressing până în tavan, croit pe pereții existenți.',
+    slug: 'paturi-lemn-masiv',
+  },
+  {
+    name: 'Holul',
+    text: 'Dulap de hol cu pantofar, cuier închis, oglindă și o bancă pe care chiar se poate sta.',
+    slug: 'dressinguri',
+  },
+  {
+    name: 'Biroul',
+    text: 'Blat încastrat în nișă sau pe toată lungimea peretelui, cu bibliotecă deasupra și cabluri ascunse.',
+    slug: 'birouri',
+  },
+  {
+    name: 'Ușile',
+    text: 'Uși de interior în aceeași nuanță ca mobila, cu toc reglabil, plus ușa de exterior din lemn masiv.',
+    slug: 'usi-interior',
+  },
+];
+
+const pageFaq = [
+  {
+    q: 'Cât durează o amenajare completă de apartament?',
+    a: 'Între 6 și 10 săptămâni, în funcție de numărul de camere și de materiale. Planificăm producția pe etape, ca să nu stați cu toată casa blocată în același timp.',
+  },
+  {
+    q: 'Montați totul deodată sau pe etape?',
+    a: 'De regulă pe etape, în ordinea în care vă e mai util: întâi bucătăria și dressingul, apoi livingul și ușile. Stabilim ordinea împreună, la proiect.',
+  },
+  {
+    q: 'Coordonați cu ceilalți meseriași?',
+    a: 'Da. Ne înțelegem direct cu electricianul și cu instalatorul pentru pozițiile de prize și de racorduri, ca să nu ajungeți dumneavoastră mesager între noi.',
+  },
+  {
+    q: 'E mai ieftin să comand tot deodată?',
+    a: 'Da, în general. Se optimizează debitarea plăcilor, se comandă feroneria într-o singură tranșă și se fac mai puține deplasări. Diferența se vede în ofertă.',
+  },
+];
+
+const schemas = [
+  serviceSchema({
+    origin,
+    url: pageUrl,
+    name: 'Amenajări complete cu mobilă la comandă',
+    description: 'Mobilarea completă a unui apartament sau a unei case, cu un singur atelier și un singur proiect.',
+    image: new URL(photo('stock/usi-interior/01').src, Astro.site).href,
+    serviceType: 'Amenajare interioară cu mobilier la comandă',
+  }),
+  breadcrumbs([{ name: 'Acasă', url: origin }, { name: 'Amenajări complete', url: pageUrl }]),
+  faqPage(pageFaq),
+];
+---
+
+<BaseLayout
+  title="Amenajări complete — apartament sau casă"
+  description="Mobilăm complet apartamente și case în județul Bacău: bucătărie, living, dormitor, hol, birou și uși, dintr-un singur atelier și cu un singur proiect."
+  image={photo('stock/usi-interior/01')}
+  schemas={schemas}
+>
+  <PageHero
+    eyebrow="Amenajări complete"
+    title='Toată casa, dintr-un <em class="italic-serif text-oak-300">singur atelier</em>'
+    text="Aceeași mână, aceleași nuanțe, aceeași feronerie în toate camerele. Un singur proiect, un singur interlocutor, o singură garanție."
+    image="stock/usi-interior/01"
+    crumbs={[{ name: 'Acasă', href: url('/') }, { name: 'Amenajări complete' }]}
+  />
+
+  <section class="bg-bone-100 py-20 md:py-28">
+    <div class="container-x grid gap-16 lg:grid-cols-12">
+      <div class="prose-wood lg:col-span-7">
+        <p class="font-serif text-[clamp(1.4rem,2.4vw,2rem)] leading-snug !text-walnut-900" data-reveal>
+          Cel mai des, o casă arată dezlânată nu pentru că mobila e proastă, ci pentru că a venit din
+          patru locuri diferite, în patru nuanțe de „stejar".
+        </p>
+        <div data-reveal>
+          <h2 class="mt-14 font-serif text-[clamp(1.5rem,2.4vw,2.05rem)] leading-tight text-walnut-900">
+            Ce se schimbă când comandați tot deodată
+          </h2>
+          <p>
+            <strong>Nuanțele se potrivesc exact.</strong> Aceeași placă, din același lot, în bucătărie și
+            în living. Două loturi diferite de „stejar sonoma" pot diferi vizibil, iar diferența se vede
+            cel mai tare exact acolo unde două camere se deschid una spre alta.
+          </p>
+          <p>
+            <strong>Feroneria e aceeași peste tot.</strong> Aceleași mânere, aceleași balamale, același
+            tip de sertar. Sună banal, dar e diferența dintre o casă care pare gândită și una în care
+            fiecare ușă se deschide altfel.
+          </p>
+          <p>
+            <strong>Prețul scade.</strong> Se optimizează debitarea — resturile dintr-o cameră devin
+            piese în alta — se comandă feroneria într-o singură tranșă și se fac mai puține deplasări
+            pentru montaj.
+          </p>
+          <p>
+            <strong>Aveți un singur interlocutor.</strong> Când ceva nu se potrivește, nu vă trimite
+            nimeni la alt furnizor. Răspundem noi pentru tot ce am montat.
+          </p>
+        </div>
+
+        <div data-reveal>
+          <h2 class="mt-14 font-serif text-[clamp(1.5rem,2.4vw,2.05rem)] leading-tight text-walnut-900">
+            Cum planificăm etapele
+          </h2>
+          <p>
+            Nu montăm tot într-o singură săptămână — ar însemna să nu puteți folosi casa deloc. Ordinea
+            uzuală e: bucătăria și dressingul întâi, pentru că sunt cele fără de care se trăiește cel mai
+            greu, apoi livingul și biroul, iar ușile la final, după ce zidăria și zugrăveala s-au așezat.
+          </p>
+          <p>
+            Pentru case noi, coordonăm direct cu electricianul și cu instalatorul. Le dăm pozițiile exacte
+            ale prizelor și ale racordurilor din proiectul nostru, ca să nu ajungeți dumneavoastră să
+            transmiteți cote între meseriași.
+          </p>
+        </div>
+      </div>
+
+      <aside class="lg:col-span-4 lg:col-start-9">
+        <div class="sticky top-28 space-y-6">
+          <div class="rounded-[1.5rem] bg-walnut-900 p-8 text-bone-50" data-reveal>
+            <p class="text-[0.62rem] font-bold uppercase tracking-[0.2em] text-bone-100/70">Avantaje</p>
+            <ul class="mt-6 space-y-4 text-sm">
+              {
+                [
+                  'Nuanțe identice în toate camerele',
+                  'Aceeași feronerie peste tot',
+                  'Preț mai bun prin optimizarea debitării',
+                  'Montaj planificat pe etape',
+                  'Un singur proiect și o singură garanție',
+                  'Coordonare cu electricianul și instalatorul',
+                ].map((t) => (
+                  <li class="flex gap-3">
+                    <Check size={16} stroke-width={2.4} class="mt-1 shrink-0 text-oak-400" />
+                    <span class="text-bone-100/85">{t}</span>
+                  </li>
+                ))
+              }
+            </ul>
+            <a href={url('/contact')} class="btn btn-oak mt-8 w-full">Cere ofertă <ArrowRight size={16} /></a>
+          </div>
+          <div class="overflow-hidden rounded-[1.5rem]" data-reveal-img>
+            <div class="aspect-[4/5]">
+              <Image
+                src={photo('dressinguri/04')}
+                alt="Mobilier încastrat, executat la comandă"
+                widths={[400, 700]}
+                sizes="(min-width: 1024px) 30vw, 100vw"
+                class="img-cover"
+              />
+            </div>
+          </div>
+        </div>
+      </aside>
+    </div>
+  </section>
+
+  <section class="bg-bone-200/60 py-20 md:py-28">
+    <div class="container-x">
+      <SectionHeading eyebrow="Cameră cu cameră" title='Ce mobilăm într-o <em class="italic-serif">casă</em>' size="md" />
+      <div class="mt-16 grid gap-px overflow-hidden rounded-[1.5rem] bg-walnut-900/10 md:grid-cols-2 lg:grid-cols-3">
+        {
+          rooms.map((r, i) => (
+            <a href={url(`/servicii/${r.slug}`)} class="group bg-bone-100 p-8 transition-colors duration-500 hover:bg-bone-200" data-reveal data-delay={i * 0.05}>
+              <h3 class="font-serif text-2xl text-walnut-900">{r.name}</h3>
+              <p class="mt-4 text-sm leading-relaxed text-muted">{r.text}</p>
+              <span class="arrow-link mt-6 text-walnut-800">
+                Detalii <ArrowRight size={14} />
+              </span>
+            </a>
+          ))
+        }
+      </div>
+    </div>
+  </section>
+
+  <section class="bg-bone-100 py-20 md:py-28">
+    <div class="container-x">
+      <SectionHeading eyebrow="Servicii incluse" title='Tot ce iese din <em class="italic-serif">atelier</em>' size="md" />
+      <div class="mt-14 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+        {related(['bucatarii', 'dressinguri', 'mobilier-living']).map((p, i) => <ProductCard product={p} index={i} />)}
+      </div>
+      <a href={url('/servicii')} class="arrow-link mt-12 text-walnut-800" data-reveal>
+        Toate cele {products.length} categorii <ArrowRight size={16} />
+      </a>
+    </div>
+  </section>
+
+  <section class="bg-bone-200/60 py-20 md:py-28">
+    <div class="container-x grid gap-14 lg:grid-cols-12">
+      <div class="lg:col-span-4">
+        <SectionHeading eyebrow="Întrebări" title='Despre <em class="italic-serif">amenajări</em>' size="md" />
+      </div>
+      <div class="lg:col-span-7 lg:col-start-6">
+        <FaqAccordion items={pageFaq} />
+      </div>
+    </div>
+  </section>
+
+  <CTASection title='Mobilăm toată casa, <em class="italic-serif text-oak-300">pe etape</em>' />
+</BaseLayout>

@@ -1,0 +1,36 @@
+---
+import { ArrowRight, Home } from '@lucide/astro';
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { products } from '../data/products';
+import { navSecondary } from '../data/site';
+import { url } from '../lib/url';
+---
+
+<BaseLayout title="Pagina nu a fost găsită" description="Pagina căutată nu există. Vedeți mai jos toate serviciile de mobilă la comandă." noindex>
+  <section class="flex min-h-[86svh] items-center bg-walnut-950 pt-24 text-bone-50">
+    <div class="pointer-events-none absolute inset-y-0 right-0 w-1/3 text-oak-400 slats" aria-hidden="true"></div>
+    <div class="container-x relative py-20">
+      <p class="eyebrow eyebrow-light" data-reveal>Eroare 404</p>
+      <h1 class="display-lg mt-6 max-w-3xl" data-split="hero">
+        Pagina asta nu a ieșit niciodată din <em class="italic-serif text-oak-300">atelier</em>
+      </h1>
+      <p class="mt-8 max-w-xl text-lg text-bone-100/70" data-reveal>
+        Poate linkul e vechi sau adresa e scrisă greșit. Mai jos aveți tot ce facem.
+      </p>
+
+      <div class="mt-12 flex flex-wrap gap-4" data-reveal>
+        <a href={url('/')} class="btn btn-oak"><Home size={16} /> Pagina principală</a>
+        <a href={url('/contact')} class="btn btn-ghost-light">Cere ofertă <ArrowRight size={16} /></a>
+      </div>
+
+      <div class="mt-16 grid gap-x-8 gap-y-2.5 border-t border-bone-50/15 pt-10 text-sm sm:grid-cols-2 lg:grid-cols-3" data-reveal>
+        {
+          products.map((p) => (
+            <a href={url(`/servicii/${p.slug}`)} class="link-underline py-1 text-bone-100/80">{p.name}</a>
+          ))
+        }
+        {navSecondary.map((n) => <a href={url(n.href)} class="link-underline py-1 text-bone-100/80">{n.label}</a>)}
+      </div>
+    </div>
+  </section>
+</BaseLayout>

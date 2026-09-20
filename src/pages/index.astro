@@ -1,0 +1,468 @@
+---
+import { Image } from 'astro:assets';
+import { ArrowRight, ArrowUpRight, Phone, MessageCircle, MapPin } from '@lucide/astro';
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Marquee from '../components/Marquee.astro';
+import ProductCard from '../components/ProductCard.astro';
+import SectionHeading from '../components/SectionHeading.astro';
+import StatsBand from '../components/StatsBand.astro';
+import FaqAccordion from '../components/FaqAccordion.astro';
+import CTASection from '../components/CTASection.astro';
+import { products } from '../data/products';
+import { site, usps } from '../data/site';
+import { steps } from '../data/process';
+import { areas } from '../data/areas';
+import { guides } from '../data/guides';
+import { faq } from '../data/faq';
+import { species } from '../data/materials';
+import { photo } from '../lib/photos';
+import { url } from '../lib/url';
+import { faqPage, itemList } from '../lib/seo';
+
+const slides = [
+  { src: photo('stock/atmosfera/01'), alt: 'Hol cu mobilier la comandă și perete din lamele de lemn' },
+  { src: photo('stock/bucatarii/01'), alt: 'Bucătărie la comandă, cu fronturi antracit și nișă din lemn' },
+  { src: photo('stock/paturi/02'), alt: 'Dormitor cu pat și tăblie din lemn masiv' },
+  { src: photo('stock/atelier/03'), alt: 'Atelierul de tâmplărie Hanu Tâmplaru\', în Pârjol' },
+];
+
+const origin = new URL(url('/'), Astro.site).href;
+
+const schemas = [
+  itemList(
+    'Servicii de tâmplărie',
+    products.map((p) => ({ name: p.name, url: new URL(url(`/servicii/${p.slug}`), Astro.site).href })),
+  ),
+  faqPage(faq.slice(0, 6)),
+];
+---
+
+<BaseLayout intro image={photo('stock/atmosfera/01')} schemas={schemas}>
+  <!-- HERO -->
+  <section class="relative flex min-h-[100svh] flex-col overflow-hidden bg-walnut-950 text-white" data-hero>
+    <div class="absolute inset-0">
+      {
+        slides.map((s, i) => (
+          <div class:list={['hero-slide absolute inset-0 overflow-hidden', i === 0 && 'is-active']} data-slide>
+            <Image
+              src={s.src}
+              alt={s.alt}
+              widths={[768, 1280, 1920]}
+              sizes="100vw"
+              loading={i === 0 ? 'eager' : 'lazy'}
+              fetchpriority={i === 0 ? 'high' : 'auto'}
+              class="img-cover"
+            />
+          </div>
+        ))
+      }
+      <div class="absolute inset-0 bg-gradient-to-b from-walnut-950/65 via-walnut-950/35 to-walnut-950/92"></div>
+      <div class="absolute inset-0 bg-gradient-to-r from-walnut-950/65 via-walnut-950/20 to-transparent"></div>
+    </div>
+
+    <div class="container-x relative flex flex-1 flex-col justify-end pb-12 pt-36 md:pb-16" data-hero-fade>
+      <div class="flex items-center gap-3 text-[0.68rem] font-bold uppercase tracking-[0.26em] text-white/85" data-reveal>
+        <MapPin size={13} stroke-width={2} class="text-oak-300" />
+        Atelier în Pârjol · lucrăm în tot județul Bacău
+      </div>
+
+      <h1 class="display-xl mt-6 max-w-[13ch]" data-split="hero">
+        Mobilă făcută <em class="italic-serif text-oak-300">pe casa dumneavoastră</em>
+      </h1>
+
+      <div class="mt-9 grid items-end gap-10 lg:grid-cols-12">
+        <p class="max-w-xl text-lg leading-relaxed text-white/85 md:text-xl lg:col-span-6" data-reveal>
+          Bucătării, dressinguri, mobilier de living și piese din lemn masiv — măsurate la fața locului,
+          desenate înainte de producție și montate de noi.
+        </p>
+        <div class="flex flex-wrap gap-4 lg:col-span-6 lg:justify-end" data-reveal>
+          <a href={url('/contact')} class="btn btn-oak">Cere ofertă gratuită <ArrowRight size={16} /></a>
+          <a href={site.whatsapp} target="_blank" rel="noopener" class="btn btn-ghost-light">
+            <MessageCircle size={16} /> WhatsApp
+          </a>
+        </div>
+      </div>
+
+      <div
+        class="h-scroll -mx-[var(--gutter)] mt-10 flex gap-3 overflow-x-auto px-[var(--gutter)] sm:mx-0 sm:mt-12 sm:grid sm:grid-cols-2 sm:gap-px sm:overflow-hidden sm:rounded-2xl sm:border sm:border-white/15 sm:px-0 lg:grid-cols-4"
+        data-reveal
+        data-delay="0.1"
+      >
+        {
+          usps.map((u) => (
+            <div class="w-[74vw] shrink-0 rounded-2xl border border-white/15 bg-white/[0.06] px-6 py-6 backdrop-blur-sm sm:w-auto sm:rounded-none sm:border-0">
+              <p class="font-serif text-[1.15rem] leading-tight tracking-[-0.01em] text-oak-300">{u.title}</p>
+              <p class="mt-2 text-[0.82rem] leading-snug text-white/70">{u.text}</p>
+            </div>
+          ))
+        }
+      </div>
+
+      <div class="mt-8 flex items-center justify-between text-[0.68rem] font-bold uppercase tracking-[0.22em] text-white/70">
+        <a href="#ce-facem" class="flex items-center gap-3">
+          <span class="scroll-cue relative block h-10 w-px overflow-hidden bg-white/25"></span>
+          Ce facem
+        </a>
+        <div class="flex items-center gap-4" aria-hidden="true">
+          <span data-slide-current>01</span>
+          <span class="relative block h-px w-16 overflow-hidden bg-white/25">
+            <span class="absolute inset-0 origin-left bg-white" data-slide-progress></span>
+          </span>
+          <span>{String(slides.length).padStart(2, '0')}</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- MANIFEST -->
+  <section id="ce-facem" class="relative bg-bone-100 pb-24 pt-24 md:pb-36 md:pt-36">
+    <div class="container-x">
+      <p class="eyebrow" data-reveal>Hanu Tâmplaru' · din 2009</p>
+      <p class="mt-10 max-w-6xl font-serif text-[clamp(1.8rem,4.2vw,3.9rem)] leading-[1.14] tracking-[-0.02em] text-walnut-900" data-scrub-words>
+        Mobila de raft se potrivește într-o casă imaginară. A dumneavoastră are pereți strâmbi, o țeavă
+        exact acolo unde nu trebuie și un colț care nu e de nouăzeci de grade. Noi pornim de la casa reală.
+      </p>
+
+      <div class="mt-20 grid items-center gap-16 md:mt-28 lg:grid-cols-12 lg:gap-10">
+        <div class="relative lg:col-span-7">
+          <div class="relative aspect-[4/5] overflow-hidden rounded-[1.75rem] md:aspect-[5/4]" data-reveal-img>
+            <Image
+              src={photo('stock/atelier/01')}
+              alt="Tâmplar rindeluind o scândură în atelierul din Pârjol"
+              widths={[640, 1024, 1400]}
+              sizes="(min-width: 1024px) 55vw, 100vw"
+              class="img-cover"
+            />
+          </div>
+          <div class="absolute -bottom-10 right-4 hidden w-[38%] overflow-hidden rounded-[1.25rem] border-[6px] border-bone-100 shadow-2xl md:block lg:-right-10" data-reveal-img data-delay="0.2">
+            <div class="aspect-[3/4]">
+              <Image
+                src={photo('stock/texturi/03')}
+                alt="Detaliu de fibră de lemn masiv, cu noduri"
+                widths={[400, 700]}
+                sizes="25vw"
+                class="img-cover"
+              />
+            </div>
+          </div>
+        </div>
+
+        <div class="lg:col-span-5 lg:pl-10">
+          <h2 class="display-md" data-split>
+            Un atelier mic, în <em class="italic-serif">Pârjol</em>, care livrează în tot județul
+          </h2>
+          <p class="lead mt-8" data-reveal>
+            Lucrăm de peste cincisprezece ani cu lemn și cu plăci. Facem tot ce intră într-o casă — de la
+            bucătăria de bloc până la ușa de stejar de la intrare — și montăm noi tot ce iese din atelier.
+          </p>
+          <p class="mt-5 text-muted" data-reveal>
+            Nu avem showroom cu fotolii și cafea. Avem un banc de lucru, un umidometru și obiceiul de a
+            măsura de două ori. Ce economisim din vitrină, punem în feronerie și în finisaj.
+          </p>
+          <div class="mt-10 flex flex-wrap gap-4" data-reveal>
+            <a href={url('/despre-noi')} class="btn btn-dark">Despre atelier <ArrowRight size={16} /></a>
+            <a href={url('/proces')} class="btn btn-ghost-dark">Cum lucrăm</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <StatsBand />
+
+  <Marquee
+    words={['Stejar', 'Frasin', 'Nuc', 'Cireș', 'Fag']}
+    class="bg-bone-100 text-walnut-800"
+  />
+
+  <!-- SERVICII: scroll orizontal pe desktop -->
+  <section class="relative bg-walnut-900 text-bone-50 lg:h-[100svh]" data-hscroll>
+    <div class="flex h-full flex-col justify-center py-24 lg:py-0">
+      <div class="container-x flex flex-col justify-between gap-8 md:flex-row md:items-end">
+        <div class="max-w-2xl">
+          <p class="eyebrow eyebrow-light" data-reveal>Ce facem</p>
+          <h2 class="display-lg mt-6" data-split>Nouă feluri de <em class="italic-serif text-oak-300">lemn</em></h2>
+        </div>
+        <div class="max-w-sm" data-reveal>
+          <p class="text-bone-100/70">
+            De la bucătăria completă până la un singur scaun. Fiecare categorie are pagina ei, cu materiale,
+            opțiuni și termene reale.
+          </p>
+          <a href={url('/servicii')} class="arrow-link mt-6 text-oak-300">Toate serviciile <ArrowRight size={16} /></a>
+        </div>
+      </div>
+
+      <div class="h-scroll mt-12 overflow-x-auto lg:mt-14 lg:overflow-hidden" data-hscroll-viewport>
+        <div class="flex w-max gap-5 px-[var(--gutter)] md:gap-7" data-hscroll-track>
+          {
+            products.map((p, i) => (
+              <ProductCard product={p} index={i} class="w-[78vw] shrink-0 sm:w-[23rem] lg:w-[min(25vw,calc((100svh-22rem)*0.8))]" />
+            ))
+          }
+          <a
+            href={url('/mobila-la-comanda')}
+            class="group flex w-[78vw] shrink-0 flex-col justify-between rounded-[1.5rem] border border-bone-100/15 p-8 transition-colors duration-500 hover:border-oak-400 sm:w-[20rem] lg:w-[18vw]"
+          >
+            <span class="eyebrow eyebrow-light">Tot ce facem</span>
+            <span>
+              <span class="block font-serif text-4xl leading-tight">Mobilă la comandă</span>
+              <span class="mt-6 flex h-14 w-14 items-center justify-center rounded-full bg-oak-400 text-walnut-900 transition-transform duration-500 group-hover:rotate-45">
+                <ArrowUpRight size={22} />
+              </span>
+            </span>
+          </a>
+        </div>
+      </div>
+
+      <div class="container-x mt-10 hidden lg:block">
+        <div class="h-px w-full bg-bone-100/15">
+          <div class="h-px origin-left scale-x-0 bg-oak-400" data-hscroll-bar></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- MATERIALE -->
+  <section class="relative overflow-hidden bg-bone-100">
+    <div class="relative h-[86svh] min-h-[520px] overflow-hidden">
+      <div class="absolute inset-x-0 -top-[12%] h-[124%]" data-parallax="10">
+        <Image
+          src={photo('stock/texturi/01')}
+          alt="Textură de stejar, fibră naturală"
+          widths={[768, 1280, 1920]}
+          sizes="100vw"
+          class="img-cover"
+        />
+      </div>
+      <div class="absolute inset-0 bg-gradient-to-t from-walnut-950/85 via-walnut-950/15 to-transparent"></div>
+      <div class="container-x relative flex h-full flex-col justify-end pb-16 text-white md:pb-24">
+        <p class="eyebrow eyebrow-light" data-reveal>Materiale</p>
+        <h2 class="display-xl mt-5" data-split>Lemn <em class="italic-serif text-oak-300">adevărat</em></h2>
+      </div>
+    </div>
+
+    <div class="container-x py-24 md:py-32">
+      <div class="grid gap-14 lg:grid-cols-12">
+        <div class="lg:col-span-5">
+          <p class="font-serif text-[clamp(1.3rem,2vw,1.7rem)] leading-snug text-walnut-900" data-reveal>
+            Lucrăm cu șase esențe de lemn masiv și cu patru tipuri de plăci. Fiecare are locul ei —
+            iar cea mai bună mobilă le combină.
+          </p>
+          <p class="mt-6 text-muted" data-reveal>
+            Lemnul pentru interior îl aducem la 8–10% umiditate și îl verificăm cu umidometrul înainte de
+            croire. E pasul pe care nu îl vedeți niciodată, dar de care depinde dacă blatul crapă sau nu
+            în prima iarnă cu caloriferele pornite.
+          </p>
+          <a href={url('/materiale-si-finisaje')} class="arrow-link mt-10 text-walnut-800" data-reveal>
+            Toate materialele și finisajele <ArrowRight size={16} />
+          </a>
+        </div>
+        <div class="lg:col-span-7">
+          <div class="grid gap-px overflow-hidden rounded-[1.5rem] bg-walnut-900/10 sm:grid-cols-2">
+            {
+              species.slice(0, 4).map((s, i) => (
+                <div class="bg-bone-100 p-7" data-reveal data-delay={i * 0.05}>
+                  <div class="flex items-baseline justify-between gap-3">
+                    <p class="font-serif text-2xl text-walnut-900">{s.name}</p>
+                    <p class="text-[0.62rem] font-bold uppercase tracking-[0.16em] text-oak-600">{s.hardness}</p>
+                  </div>
+                  <p class="mt-1 text-xs italic text-muted">{s.latin}</p>
+                  <p class="mt-4 text-sm leading-snug text-muted">{s.tone}</p>
+                </div>
+              ))
+            }
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- PROCES -->
+  <section class="bg-bone-200/60 py-24 md:py-36">
+    <div class="container-x">
+      <div class="mb-16 flex flex-col justify-between gap-8 md:flex-row md:items-end">
+        <SectionHeading
+          eyebrow="Cum lucrăm"
+          title='De la telefon la <em class="italic-serif">mobila montată</em>'
+          size="md"
+        />
+        <a href={url('/proces')} class="btn btn-ghost-dark shrink-0" data-reveal>Procesul complet <ArrowRight size={16} /></a>
+      </div>
+      <ol class="grid gap-px overflow-hidden rounded-[1.5rem] bg-walnut-900/10 md:grid-cols-2 lg:grid-cols-4">
+        {
+          steps.slice(0, 4).map((s, i) => (
+            <li class="bg-bone-100 p-8 md:p-9" data-reveal data-delay={i * 0.06}>
+              <p class="font-serif text-4xl text-oak-500">{s.n}</p>
+              <h3 class="mt-5 font-serif text-[1.35rem] leading-tight text-walnut-900">{s.title}</h3>
+              <p class="mt-3 text-sm leading-relaxed text-muted">{s.text}</p>
+              <p class="mt-5 text-[0.62rem] font-bold uppercase tracking-[0.18em] text-oak-600">{s.duration}</p>
+            </li>
+          ))
+        }
+      </ol>
+    </div>
+  </section>
+
+  <!-- PORTOFOLIU -->
+  <section class="grain relative overflow-hidden bg-walnut-900 py-24 text-bone-50 md:py-36">
+    <div class="container-x">
+      <div class="mb-14 flex flex-col justify-between gap-8 md:flex-row md:items-end">
+        <SectionHeading
+          eyebrow="Portofoliu"
+          title='Lucrări ieșite din <em class="italic-serif text-oak-300">atelier</em>'
+          light
+          size="md"
+        />
+        <a href={url('/portofoliu')} class="btn btn-oak shrink-0" data-reveal>Vezi portofoliul <ArrowRight size={16} /></a>
+      </div>
+      <div class="grid grid-cols-2 gap-4 md:grid-cols-4 md:gap-5">
+        {
+          ['bucatarii/01', 'dressinguri/01', 'living/02', 'bucatarii/04', 'dressinguri/03', 'living/03', 'mese/01', 'bucatarii/02'].map((p, i) => (
+            <div class:list={['overflow-hidden rounded-[1.25rem]', i === 0 && 'col-span-2 row-span-2']} data-reveal-img data-delay={i * 0.05}>
+              <div class:list={[i === 0 ? 'aspect-square' : 'aspect-[4/5]']}>
+                <Image
+                  src={photo(p)}
+                  alt="Lucrare de mobilă la comandă realizată de Hanu Tâmplaru'"
+                  widths={[400, 700, 900]}
+                  sizes="(min-width: 768px) 25vw, 50vw"
+                  class="img-cover"
+                />
+              </div>
+            </div>
+          ))
+        }
+      </div>
+    </div>
+  </section>
+
+  <!-- ZONE -->
+  <section class="bg-bone-100 py-24 md:py-32">
+    <div class="container-x grid gap-14 lg:grid-cols-12">
+      <div class="lg:col-span-5">
+        <SectionHeading
+          eyebrow="Zone deservite"
+          title='Tot județul <em class="italic-serif">Bacău</em>'
+          text="Ne deplasăm gratuit pentru măsurători în toate orașele și comunele din județ. Pentru proiecte mari mergem și în Neamț, Vaslui sau Vrancea."
+          size="md"
+        />
+        <a href={url('/zone-deservite')} class="arrow-link mt-10 text-walnut-800" data-reveal>
+          Toate localitățile <ArrowRight size={16} />
+        </a>
+      </div>
+      <div class="lg:col-span-7">
+        <ul class="grid gap-px overflow-hidden rounded-[1.5rem] bg-walnut-900/10 sm:grid-cols-2">
+          {
+            areas.map((a, i) => (
+              <li data-reveal data-delay={Math.min(i, 6) * 0.04}>
+                <a href={url(`/mobila-la-comanda/${a.slug}`)} class="group flex items-center justify-between gap-4 bg-bone-100 px-7 py-6 transition-colors duration-500 hover:bg-bone-200">
+                  <span>
+                    <span class="block font-serif text-xl text-walnut-900">{a.name}</span>
+                    <span class="mt-1 block text-xs text-muted">{a.demand}</span>
+                  </span>
+                  <ArrowUpRight size={18} class="shrink-0 text-oak-600 transition-transform duration-500 group-hover:rotate-45" />
+                </a>
+              </li>
+            ))
+          }
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- GHIDURI -->
+  <section class="bg-bone-200/60 py-24 md:py-32">
+    <div class="container-x">
+      <div class="mb-14 flex flex-col justify-between gap-8 md:flex-row md:items-end">
+        <SectionHeading eyebrow="Ghiduri" title='Ce e bine să <em class="italic-serif">știți dinainte</em>' size="md" />
+        <a href={url('/ghiduri')} class="btn btn-ghost-dark shrink-0" data-reveal>Toate ghidurile <ArrowRight size={16} /></a>
+      </div>
+      <div class="grid gap-6 md:grid-cols-3">
+        {
+          guides.slice(0, 3).map((g, i) => (
+            <a
+              href={url(`/ghiduri/${g.slug}`)}
+              class="group flex flex-col justify-between rounded-[1.5rem] bg-bone-50 p-8 transition-transform duration-500 ease-[var(--ease-out-expo)] hover:-translate-y-1.5"
+              data-reveal
+              data-delay={i * 0.06}
+            >
+              <div>
+                <p class="text-[0.62rem] font-bold uppercase tracking-[0.18em] text-oak-600">{g.category} · {g.readingTime} min</p>
+                <h3 class="mt-5 font-serif text-[1.5rem] leading-tight text-walnut-900">{g.title}</h3>
+                <p class="mt-4 text-sm leading-relaxed text-muted">{g.excerpt}</p>
+              </div>
+              <span class="arrow-link mt-8 text-walnut-800">Citește <ArrowRight size={15} /></span>
+            </a>
+          ))
+        }
+      </div>
+    </div>
+  </section>
+
+  <!-- FAQ -->
+  <section class="bg-bone-100 py-24 md:py-32">
+    <div class="container-x grid gap-14 lg:grid-cols-12">
+      <div class="lg:col-span-4">
+        <SectionHeading eyebrow="Întrebări frecvente" title='Răspunsuri <em class="italic-serif">scurte</em>' size="md" />
+        <a href={url('/intrebari-frecvente')} class="arrow-link mt-8 text-walnut-800" data-reveal>Toate întrebările <ArrowRight size={16} /></a>
+        <div class="mt-10 rounded-[1.5rem] bg-bone-200/70 p-7" data-reveal>
+          <p class="font-serif text-xl text-walnut-900">Nu găsiți răspunsul?</p>
+          <p class="mt-3 text-sm text-muted">Sunați-ne. Răspundem și dacă întrebarea e „nu știu de unde să încep".</p>
+          <a href={site.phoneHref} class="btn btn-dark mt-6 w-full">
+            <Phone size={15} /> {site.phone}
+          </a>
+        </div>
+      </div>
+      <div class="lg:col-span-7 lg:col-start-6">
+        <FaqAccordion items={faq.slice(0, 6)} />
+      </div>
+    </div>
+  </section>
+
+  <CTASection title='Măsurăm gratuit, în tot <em class="italic-serif text-oak-300">județul Bacău</em>' />
+</BaseLayout>
+
+<script>
+  const hero = document.querySelector<HTMLElement>('[data-hero]');
+  if (hero) {
+    const slides = Array.from(hero.querySelectorAll<HTMLElement>('[data-slide]'));
+    const current = hero.querySelector<HTMLElement>('[data-slide-current]');
+    const progress = hero.querySelector<HTMLElement>('[data-slide-progress]');
+    const DURATION = 6500;
+    let index = 0;
+    let timer: number | undefined;
+
+    const animateProgress = () => {
+      progress?.animate([{ transform: 'scaleX(0)' }, { transform: 'scaleX(1)' }], {
+        duration: DURATION,
+        easing: 'linear',
+        fill: 'forwards',
+      });
+    };
+
+    const show = (i: number) => {
+      slides[index].classList.remove('is-active');
+      index = (i + slides.length) % slides.length;
+      const next = slides[index];
+      next.querySelector('img')?.setAttribute('loading', 'eager');
+      next.classList.add('is-active');
+      if (current) current.textContent = String(index + 1).padStart(2, '0');
+      animateProgress();
+    };
+
+    const start = () => {
+      stop();
+      timer = window.setInterval(() => show(index + 1), DURATION);
+    };
+    const stop = () => window.clearInterval(timer);
+
+    window.addEventListener('load', () => {
+      slides.slice(1).forEach((s) => s.querySelector('img')?.setAttribute('loading', 'eager'));
+    });
+
+    if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches && slides.length > 1) {
+      animateProgress();
+      start();
+      document.addEventListener('visibilitychange', () => (document.hidden ? stop() : start()));
+    }
+  }
+</script>

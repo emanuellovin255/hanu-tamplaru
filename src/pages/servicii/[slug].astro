@@ -1,0 +1,292 @@
+---
+import { Image } from 'astro:assets';
+import { ArrowRight, ArrowLeft, Check, Phone, MessageCircle, Clock } from '@lucide/astro';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import Gallery from '../../components/Gallery.astro';
+import ProductCard from '../../components/ProductCard.astro';
+import Breadcrumbs from '../../components/Breadcrumbs.astro';
+import FaqAccordion from '../../components/FaqAccordion.astro';
+import QuoteForm from '../../components/QuoteForm.astro';
+import SectionHeading from '../../components/SectionHeading.astro';
+import { products, related, type Product } from '../../data/products';
+import { site } from '../../data/site';
+import { steps } from '../../data/process';
+import { photo, photos } from '../../lib/photos';
+import { url } from '../../lib/url';
+import { serviceSchema, breadcrumbs, faqPage } from '../../lib/seo';
+
+export function getStaticPaths() {
+  return products.map((product) => ({ params: { slug: product.slug }, props: { product } }));
+}
+
+interface Props {
+  product: Product;
+}
+
+const { product } = Astro.props;
+const heroImg = photo(product.hero);
+const gallery = product.folders.flatMap((f) => photos(f));
+const index = products.findIndex((p) => p.slug === product.slug);
+const prev = products[(index - 1 + products.length) % products.length];
+const next = products[(index + 1) % products.length];
+const siblings = related(product.related);
+
+const origin = new URL(url('/'), Astro.site).href;
+const pageUrl = new URL(url(`/servicii/${product.slug}`), Astro.site).href;
+const ogUrl = new URL(heroImg.src, Astro.site).href;
+
+const schemas = [
+  serviceSchema({
+    origin,
+    url: pageUrl,
+    name: product.h1,
+    description: product.metaDescription,
+    image: ogUrl,
+    serviceType: product.name,
+  }),
+  breadcrumbs([
+    { name: 'Acasă', url: origin },
+    { name: 'Servicii', url: new URL(url('/servicii'), Astro.site).href },
+    { name: product.name, url: pageUrl },
+  ]),
+  faqPage(product.faq),
+];
+---
+
+<BaseLayout title={product.metaTitle} description={product.metaDescription} image={heroImg} schemas={schemas}>
+  <!-- HERO -->
+  <section class="relative flex min-h-[84svh] items-end overflow-hidden bg-walnut-900 text-white">
+    <div class="absolute inset-x-0 -top-[10%] h-[120%]" data-parallax="8">
+      <Image
+        src={heroImg}
+        alt={`${product.name} la comandă, realizate de Hanu Tâmplaru' în județul Bacău`}
+        widths={[768, 1280, 1920]}
+        sizes="100vw"
+        loading="eager"
+        fetchpriority="high"
+        class="img-cover"
+      />
+    </div>
+    <div class="absolute inset-0 bg-gradient-to-t from-walnut-950 via-walnut-950/45 to-walnut-950/45"></div>
+    <div class="absolute inset-0 bg-gradient-to-r from-walnut-950/55 to-transparent"></div>
+
+    <div class="container-x relative pb-14 pt-40 md:pb-20" data-hero-fade>
+      <Breadcrumbs
+        items={[
+          { name: 'Acasă', href: url('/') },
+          { name: 'Servicii', href: url('/servicii') },
+          { name: product.name },
+        ]}
+        light
+      />
+      <p class="eyebrow eyebrow-light mt-8">{product.eyebrow}</p>
+      <h1 class="display-lg mt-6 max-w-5xl" data-split="hero">{product.h1}</h1>
+      <p class="mt-8 max-w-2xl text-lg leading-relaxed text-white/85 md:text-xl" data-reveal>{product.intro}</p>
+      <div class="mt-10 flex flex-wrap gap-4" data-reveal>
+        <a href="#oferta" class="btn btn-oak">Cere ofertă gratuită <ArrowRight size={16} /></a>
+        <a href={site.whatsapp} target="_blank" rel="noopener" class="btn btn-ghost-light">
+          <MessageCircle size={16} /> WhatsApp
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- CONȚINUT -->
+  <section class="bg-bone-100 py-20 md:py-32">
+    <div class="container-x grid gap-16 lg:grid-cols-12">
+      <div class="lg:col-span-7">
+        <p class="font-serif text-[clamp(1.45rem,2.5vw,2.1rem)] leading-snug text-walnut-900" data-reveal>{product.lead}</p>
+
+        <div class="prose-wood mt-14 max-w-none">
+          {
+            product.sections.map((s) => (
+              <div data-reveal>
+                <h2 class="mt-12 font-serif text-[clamp(1.5rem,2.4vw,2.05rem)] leading-tight text-walnut-900 first:mt-0">{s.h3}</h2>
+                {s.body.map((p) => <p set:html={p} />)}
+              </div>
+            ))
+          }
+        </div>
+
+        <!-- OPȚIUNI -->
+        <div class="mt-20">
+          <h2 class="display-sm font-serif text-walnut-900" data-split>Opțiuni și configurații</h2>
+          <div class="mt-10 space-y-8">
+            {
+              product.options.map((opt, i) => (
+                <div class="border-t border-walnut-900/10 pt-6" data-reveal data-delay={i * 0.04}>
+                  <p class="text-[0.65rem] font-bold uppercase tracking-[0.2em] text-oak-600">{opt.label}</p>
+                  <ul class="mt-4 flex flex-wrap gap-2">
+                    {opt.values.map((v) => (
+                      <li class="inline-flex items-center gap-2 rounded-full border border-walnut-900/15 px-4 py-2 text-sm text-walnut-900">
+                        <Check size={13} stroke-width={2.4} class="text-oak-600" /> {v}
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              ))
+            }
+          </div>
+        </div>
+      </div>
+
+      <!-- CARD LATERAL -->
+      <aside class="lg:col-span-4 lg:col-start-9">
+        <div class="sticky top-28 space-y-6">
+          <div class="rounded-[1.5rem] bg-walnut-900 p-8 text-bone-50 md:p-9" data-reveal>
+            <p class="text-[0.62rem] font-bold uppercase tracking-[0.2em] text-bone-100/70">Ofertă personalizată</p>
+            <p class="mt-3 font-serif text-[1.9rem] leading-tight">
+              Măsurăm și vă desenăm <em class="italic-serif text-oak-300">gratuit</em>
+            </p>
+            <p class="mt-4 text-sm leading-relaxed text-bone-100/70">
+              Prețul depinde de dimensiuni, materiale și feronerie. Venim, măsurăm și vă trimitem o ofertă
+              detaliată pe poziții — fără obligații.
+            </p>
+            <div class="my-7 h-px bg-bone-100/15"></div>
+            <ul class="space-y-3 text-sm text-bone-100/80">
+              {
+                product.specs.map((s) => (
+                  <li class="flex justify-between gap-4">
+                    <span>{s.label}</span>
+                    <span class="text-right font-semibold text-bone-50">{s.value}</span>
+                  </li>
+                ))
+              }
+            </ul>
+            <a href="#oferta" class="btn btn-oak mt-8 w-full">Cere ofertă <ArrowRight size={16} /></a>
+            <a href={site.phoneHref} class="btn btn-ghost-light mt-3 w-full">
+              <Phone size={15} /> {site.phone}
+            </a>
+          </div>
+
+          <div class="rounded-[1.5rem] border border-walnut-900/12 p-7" data-reveal data-delay="0.1">
+            <p class="text-[0.62rem] font-bold uppercase tracking-[0.2em] text-oak-600">De ce noi</p>
+            <ul class="mt-5 space-y-4">
+              {
+                product.benefits.map((b) => (
+                  <li>
+                    <p class="font-serif text-lg leading-tight text-walnut-900">{b.title}</p>
+                    <p class="mt-1 text-sm leading-snug text-muted">{b.text}</p>
+                  </li>
+                ))
+              }
+            </ul>
+          </div>
+        </div>
+      </aside>
+    </div>
+  </section>
+
+  <!-- GALERIE -->
+  {
+    gallery.length > 0 && (
+      <section class="bg-bone-100 pb-24 md:pb-32">
+        <div class="container-x">
+          <div class="mb-12 flex items-end justify-between gap-6">
+            <h2 class="display-md" data-split>
+              {product.name} — <em class="italic-serif">galerie</em>
+            </h2>
+            <p class="shrink-0 text-sm text-muted" data-reveal>{gallery.length} fotografii</p>
+          </div>
+          <Gallery
+            items={gallery.map((src, i) => ({ src, alt: `${product.name} la comandă – imaginea ${i + 1}` }))}
+            layout="grid"
+          />
+        </div>
+      </section>
+    )
+  }
+
+  <!-- PROCES SCURT -->
+  <section class="grain relative overflow-hidden bg-walnut-900 py-20 text-bone-50 md:py-28">
+    <div class="container-x">
+      <div class="mb-12 flex flex-col justify-between gap-6 md:flex-row md:items-end">
+        <SectionHeading eyebrow="Cum lucrăm" title='În <em class="italic-serif text-oak-300">șapte pași</em>' light size="md" />
+        <a href={url('/proces')} class="arrow-link shrink-0 text-oak-300" data-reveal>Procesul complet <ArrowRight size={16} /></a>
+      </div>
+      <ol class="grid gap-6 md:grid-cols-3">
+        {
+          [steps[1], steps[2], steps[5]].map((s, i) => (
+            <li class="rounded-[1.25rem] border border-bone-50/12 p-7" data-reveal data-delay={i * 0.07}>
+              <p class="font-serif text-3xl text-oak-400">{s.n}</p>
+              <h3 class="mt-4 font-serif text-xl leading-tight">{s.title}</h3>
+              <p class="mt-3 text-sm leading-relaxed text-bone-100/70">{s.text}</p>
+              <p class="mt-5 flex items-center gap-2 text-[0.62rem] font-bold uppercase tracking-[0.18em] text-oak-300">
+                <Clock size={12} /> {s.duration}
+              </p>
+            </li>
+          ))
+        }
+      </ol>
+    </div>
+  </section>
+
+  <!-- FAQ -->
+  <section class="bg-bone-100 py-24 md:py-32">
+    <div class="container-x grid gap-14 lg:grid-cols-12">
+      <div class="lg:col-span-4">
+        <SectionHeading eyebrow="Întrebări frecvente" title={`Despre <em class="italic-serif">${product.name.toLowerCase()}</em>`} size="md" />
+        <a href={url('/intrebari-frecvente')} class="arrow-link mt-8 text-walnut-800" data-reveal>Toate întrebările <ArrowRight size={16} /></a>
+      </div>
+      <div class="lg:col-span-7 lg:col-start-6">
+        <FaqAccordion items={product.faq} />
+      </div>
+    </div>
+  </section>
+
+  <!-- FORMULAR -->
+  <section id="oferta" class="bg-bone-200/60 py-24 md:py-32">
+    <div class="container-x grid gap-14 lg:grid-cols-12">
+      <div class="lg:col-span-4">
+        <SectionHeading
+          eyebrow="Cerere de ofertă"
+          title={`Vreau ${product.name.toLowerCase()}`}
+          text="Completați formularul sau scrieți-ne direct pe WhatsApp. Răspundem în aceeași zi lucrătoare."
+          size="md"
+        />
+        <div class="mt-10 space-y-3 text-sm" data-reveal>
+          <a href={site.phoneHref} class="flex items-center gap-3 font-semibold text-walnut-900">
+            <Phone size={16} class="text-oak-600" /> {site.phone}
+          </a>
+          <a href={site.whatsapp} target="_blank" rel="noopener" class="flex items-center gap-3 text-muted">
+            <MessageCircle size={16} class="text-[#25d366]" /> Trimiteți poze pe WhatsApp
+          </a>
+        </div>
+      </div>
+      <div class="lg:col-span-7 lg:col-start-6">
+        <QuoteForm preselect={product.slug} />
+      </div>
+    </div>
+  </section>
+
+  <!-- NAVIGARE -->
+  <section class="border-t border-walnut-900/10 bg-bone-100">
+    <div class="container-x grid grid-cols-2">
+      <a href={url(`/servicii/${prev.slug}`)} class="group flex flex-col gap-2 border-r border-walnut-900/10 py-10 pr-4 md:py-14">
+        <span class="flex items-center gap-2 text-[0.62rem] font-bold uppercase tracking-[0.2em] text-muted">
+          <ArrowLeft size={14} class="transition-transform duration-500 group-hover:-translate-x-1" /> Anterior
+        </span>
+        <span class="font-serif text-xl md:text-3xl">{prev.name}</span>
+      </a>
+      <a href={url(`/servicii/${next.slug}`)} class="group flex flex-col items-end gap-2 py-10 pl-4 text-right md:py-14">
+        <span class="flex items-center gap-2 text-[0.62rem] font-bold uppercase tracking-[0.2em] text-muted">
+          Următor <ArrowRight size={14} class="transition-transform duration-500 group-hover:translate-x-1" />
+        </span>
+        <span class="font-serif text-xl md:text-3xl">{next.name}</span>
+      </a>
+    </div>
+  </section>
+
+  <!-- PRODUSE CONEXE -->
+  <section class="bg-walnut-900 py-24 text-bone-50 md:py-32">
+    <div class="container-x">
+      <div class="mb-12 flex flex-col justify-between gap-6 md:flex-row md:items-end">
+        <h2 class="display-md" data-split>Merge bine cu <em class="italic-serif text-oak-300">astea</em></h2>
+        <a href={url('/servicii')} class="arrow-link shrink-0 text-oak-300" data-reveal>Toate serviciile <ArrowRight size={16} /></a>
+      </div>
+      <div class="grid gap-6 md:grid-cols-3">
+        {siblings.map((p, i) => <ProductCard product={p} index={i} />)}
+      </div>
+    </div>
+  </section>
+</BaseLayout>

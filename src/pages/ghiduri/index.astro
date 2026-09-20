@@ -1,0 +1,72 @@
+---
+import { ArrowRight, Clock } from '@lucide/astro';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import PageHero from '../../components/PageHero.astro';
+import CTASection from '../../components/CTASection.astro';
+import { guides } from '../../data/guides';
+import { photo } from '../../lib/photos';
+import { url } from '../../lib/url';
+import { itemList, breadcrumbs } from '../../lib/seo';
+
+const origin = new URL(url('/'), Astro.site).href;
+const pageUrl = new URL(url('/ghiduri'), Astro.site).href;
+
+const schemas = [
+  itemList(
+    'Ghiduri despre mobila la comandă',
+    guides.map((g) => ({ name: g.title, url: new URL(url(`/ghiduri/${g.slug}`), Astro.site).href })),
+  ),
+  breadcrumbs([
+    { name: 'Acasă', url: origin },
+    { name: 'Ghiduri', url: pageUrl },
+  ]),
+];
+---
+
+<BaseLayout
+  title="Ghiduri despre mobila la comandă"
+  description="Ghiduri practice despre mobila la comandă: cât costă o bucătărie, ce material alegeți, cum se măsoară corect o cameră și ce finisaj rezistă cel mai bine."
+  image={photo('stock/texturi/01')}
+  schemas={schemas}
+>
+  <PageHero
+    eyebrow="Ghiduri"
+    title='Ce e bine să știți <em class="italic-serif text-oak-300">dinainte</em>'
+    text="Am scris ce explicăm cel mai des la telefon. Fără marketing, doar ce contează când luați decizia."
+    image="stock/texturi/01"
+    crumbs={[{ name: 'Acasă', href: url('/') }, { name: 'Ghiduri' }]}
+  />
+
+  <section class="bg-bone-100 py-20 md:py-28">
+    <div class="container-x grid gap-6 md:grid-cols-2">
+      {
+        guides.map((g, i) => (
+          <a
+            href={url(`/ghiduri/${g.slug}`)}
+            class:list={[
+              'group flex flex-col justify-between rounded-[1.5rem] bg-bone-50 p-8 transition-transform duration-500 ease-[var(--ease-out-expo)] hover:-translate-y-1.5 md:p-10',
+              i === 0 && 'md:col-span-2',
+            ]}
+            data-reveal
+            data-delay={i * 0.06}
+          >
+            <div>
+              <p class="flex items-center gap-3 text-[0.62rem] font-bold uppercase tracking-[0.18em] text-oak-600">
+                {g.category}
+                <span class="h-px w-6 bg-current opacity-50" />
+                <span class="flex items-center gap-1.5 text-muted"><Clock size={11} /> {g.readingTime} min</span>
+              </p>
+              <h2 class:list={['mt-5 font-serif leading-tight text-walnut-900', i === 0 ? 'text-[clamp(1.9rem,4vw,3.2rem)]' : 'text-[1.6rem]']}>
+                {g.title}
+              </h2>
+              <p class:list={['mt-5 leading-relaxed text-muted', i === 0 ? 'max-w-2xl text-lg' : 'text-sm']}>{g.excerpt}</p>
+            </div>
+            <span class="arrow-link mt-8 text-walnut-800">Citește ghidul <ArrowRight size={15} /></span>
+          </a>
+        ))
+      }
+    </div>
+  </section>
+
+  <CTASection title='Aveți o întrebare care nu e <em class="italic-serif text-oak-300">în niciun ghid</em>?' />
+</BaseLayout>

@@ -1,0 +1,91 @@
+---
+import { Phone, Mail, MapPin, ArrowUpRight } from '@lucide/astro';
+import Logo from './Logo.astro';
+import { site, fullAddress, navSecondary, mapsLink } from '../data/site';
+import { products } from '../data/products';
+import { areas } from '../data/areas';
+import { url } from '../lib/url';
+
+const year = new Date().getFullYear();
+---
+
+<footer class="grain relative overflow-hidden bg-walnut-950 pt-20 text-bone-100/70 md:pt-28">
+  <div class="container-x">
+    <div class="grid gap-14 lg:grid-cols-12 lg:gap-10">
+      <div class="lg:col-span-4">
+        <Logo id="logo-footer" class="text-bone-50" />
+        <p class="mt-7 max-w-sm text-sm leading-relaxed">
+          Atelier de tâmplărie în Pârjol, județul Bacău. Facem mobilă la comandă, din lemn masiv și din
+          plăci, cu măsurători, proiect și montaj incluse.
+        </p>
+        <div class="mt-8 space-y-3 text-sm">
+          <a href={site.phoneHref} class="flex items-center gap-3 text-bone-50 transition-colors hover:text-oak-300">
+            <Phone size={16} stroke-width={1.6} class="shrink-0 text-oak-400" />
+            {site.phone}
+          </a>
+          <a href={`mailto:${site.email}`} class="flex items-center gap-3 transition-colors hover:text-oak-300">
+            <Mail size={16} stroke-width={1.6} class="shrink-0 text-oak-400" />
+            {site.email}
+          </a>
+          <a href={mapsLink} target="_blank" rel="noopener" class="flex items-start gap-3 transition-colors hover:text-oak-300">
+            <MapPin size={16} stroke-width={1.6} class="mt-1 shrink-0 text-oak-400" />
+            {fullAddress}
+          </a>
+        </div>
+        <a href={site.whatsapp} target="_blank" rel="noopener" class="btn btn-whatsapp mt-8">
+          Scrieți-ne pe WhatsApp <ArrowUpRight size={15} />
+        </a>
+      </div>
+
+      <div class="lg:col-span-3">
+        <p class="text-[0.65rem] font-bold uppercase tracking-[0.22em] text-oak-300">Ce facem</p>
+        <ul class="mt-6 space-y-2.5 text-sm">
+          {
+            products.map((p) => (
+              <li>
+                <a href={url(`/servicii/${p.slug}`)} class="link-underline transition-colors hover:text-bone-50">{p.name}</a>
+              </li>
+            ))
+          }
+        </ul>
+      </div>
+
+      <div class="lg:col-span-3">
+        <p class="text-[0.65rem] font-bold uppercase tracking-[0.22em] text-oak-300">Informații</p>
+        <ul class="mt-6 space-y-2.5 text-sm">
+          {
+            navSecondary.map((item) => (
+              <li>
+                <a href={url(item.href)} class="link-underline transition-colors hover:text-bone-50">{item.label}</a>
+              </li>
+            ))
+          }
+          <li><a href={url('/portofoliu')} class="link-underline transition-colors hover:text-bone-50">Portofoliu</a></li>
+          <li><a href={url('/contact')} class="link-underline transition-colors hover:text-bone-50">Contact</a></li>
+        </ul>
+      </div>
+
+      <div class="lg:col-span-2">
+        <p class="text-[0.65rem] font-bold uppercase tracking-[0.22em] text-oak-300">Unde lucrăm</p>
+        <ul class="mt-6 space-y-2.5 text-sm">
+          {
+            areas.map((a) => (
+              <li>
+                <a href={url(`/mobila-la-comanda/${a.slug}`)} class="link-underline transition-colors hover:text-bone-50">{a.name}</a>
+              </li>
+            ))
+          }
+        </ul>
+      </div>
+    </div>
+
+    <div class="mt-16 flex flex-col items-start gap-3 border-t border-bone-50/10 py-8 text-xs md:flex-row md:items-center md:justify-between">
+      <p>© {year} {site.name}. Toate drepturile rezervate.</p>
+      <p class="text-bone-100/45">
+        Program: {site.hours[0].days} {site.hours[0].time} · {site.hours[1].days} {site.hours[1].time}
+      </p>
+    </div>
+  </div>
+
+  <div class="pointer-events-none absolute inset-x-0 bottom-0 h-24 text-oak-400 slats" aria-hidden="true"></div>
+</footer>

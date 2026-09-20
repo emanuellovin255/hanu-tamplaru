@@ -1,0 +1,203 @@
+---
+import { Image } from 'astro:assets';
+import { ArrowRight, MapPin, Clock, Phone } from '@lucide/astro';
+import BaseLayout from '../layouts/BaseLayout.astro';
+import PageHero from '../components/PageHero.astro';
+import SectionHeading from '../components/SectionHeading.astro';
+import StatsBand from '../components/StatsBand.astro';
+import CTASection from '../components/CTASection.astro';
+import Marquee from '../components/Marquee.astro';
+import { site, fullAddress, usps } from '../data/site';
+import { photo } from '../lib/photos';
+import { url } from '../lib/url';
+import { breadcrumbs } from '../lib/seo';
+
+const origin = new URL(url('/'), Astro.site).href;
+const pageUrl = new URL(url('/despre-noi'), Astro.site).href;
+
+const schemas = [
+  breadcrumbs([{ name: 'Acasă', url: origin }, { name: 'Despre noi', url: pageUrl }]),
+  {
+    '@context': 'https://schema.org',
+    '@type': 'AboutPage',
+    name: `Despre ${site.name}`,
+    url: pageUrl,
+    description: `Atelier de tâmplărie în Pârjol, județul Bacău, activ din ${site.foundingYear}.`,
+  },
+];
+
+const principles = [
+  {
+    n: '01',
+    t: 'Măsurăm de două ori',
+    d: 'Fiecare perete, în trei puncte, plus diagonalele. Costă o oră în plus la măsurători și scutește o zi de improvizat la montaj.',
+  },
+  {
+    n: '02',
+    t: 'Spunem și ce nu se poate',
+    d: 'Dacă un proiect nu are sens tehnic sau dacă bugetul nu acoperă ce vă doriți, vă spunem înainte, nu la jumătatea lucrării.',
+  },
+  {
+    n: '03',
+    t: 'Scriem marca feroneriei',
+    d: 'În ofertă apare exact ce montăm. Așa puteți compara corect cu alte propuneri, nu doar după suma finală.',
+  },
+  {
+    n: '04',
+    t: 'Plecăm cu molozul',
+    d: 'Ambalaje, resturi de placă, praf. Montajul se încheie cu camera curată, nu cu un morman în hol.',
+  },
+];
+---
+
+<BaseLayout
+  title="Despre noi — atelier de tâmplărie în Pârjol"
+  description="Hanu Tâmplaru' e un atelier de tâmplărie din Pârjol, județul Bacău, activ din 2009. Facem mobilă la comandă, din lemn masiv și din plăci, cu montaj propriu."
+  image={photo('stock/atelier/01')}
+  schemas={schemas}
+>
+  <PageHero
+    eyebrow="Despre noi"
+    title='Un atelier, un banc de lucru și <em class="italic-serif text-oak-300">obiceiul de a măsura de două ori</em>'
+    text="Lucrăm din 2009 în Pârjol, județul Bacău. Facem mobilă la comandă pentru case și apartamente și montăm noi tot ce iese din atelier."
+    image="stock/atelier/01"
+    crumbs={[{ name: 'Acasă', href: url('/') }, { name: 'Despre noi' }]}
+  />
+
+  <section class="bg-bone-100 py-20 md:py-28">
+    <div class="container-x grid gap-16 lg:grid-cols-12">
+      <div class="prose-wood lg:col-span-7">
+        <p class="font-serif text-[clamp(1.4rem,2.4vw,2rem)] leading-snug !text-walnut-900" data-reveal>
+          Nu avem showroom cu fotolii și cafea. Ce economisim din vitrină, punem în feronerie și în finisaj.
+        </p>
+        <div data-reveal>
+          <p>
+            Hanu Tâmplaru' a început ca un atelier mic, cu comenzi de la vecini și de la cunoscuți. A
+            crescut pe recomandări — ceea ce, într-o comună din județul Bacău, e singurul fel de reclamă
+            care chiar funcționează. Dacă mobila scârțâie după un an, află tot satul înaintea noastră.
+          </p>
+          <p>
+            În cincisprezece ani am trecut prin toate tipurile de lucrare: bucătării de garsonieră de
+            cinci metri pătrați, dressinguri în mansarde cu grinzi la vedere, uși de stejar pentru case
+            de pe Valea Trotușului și mese de zece persoane pentru pensiuni. Fiecare a lăsat ceva:
+            o soluție pentru un colț imposibil, un tip de îmbinare care ține mai bine, un furnizor de
+            feronerie care nu ne-a dezamăgit.
+          </p>
+        </div>
+
+        <div data-reveal>
+          <h2 class="mt-14 font-serif text-[clamp(1.5rem,2.4vw,2.05rem)] leading-tight text-walnut-900">
+            Ce facem și ce nu facem
+          </h2>
+          <p>
+            Facem mobilă pe comandă, croită pe cotele reale ale casei dumneavoastră: bucătării,
+            dressinguri, mobilier de living, paturi, mese, scaune, birouri, uși de interior și de
+            exterior. Lucrăm și cu lemn masiv, și cu plăci, pentru că fiecare material își are locul lui.
+          </p>
+          <p>
+            Nu vindem mobilă gata făcută și nu revindem module de import. Nu facem tâmplărie PVC sau
+            aluminiu. Nu lucrăm fără măsurători la fața locului — oricât de simplu ar părea proiectul,
+            camera are întotdeauna o surpriză.
+          </p>
+        </div>
+
+        <div data-reveal>
+          <h2 class="mt-14 font-serif text-[clamp(1.5rem,2.4vw,2.05rem)] leading-tight text-walnut-900">
+            De ce ne puteți crede pe cuvânt
+          </h2>
+          <p>
+            Pentru că nu plecăm nicăieri. Atelierul e în Pârjol, la 25 de kilometri de Moinești și la 45
+            de Bacău. Dacă peste trei ani se slăbește o balama, ne sunați și venim. Nu e o promisiune de
+            marketing; e pur și simplu cea mai ieftină variantă pentru noi, față de a pierde recomandările
+            dintr-o localitate întreagă.
+          </p>
+          <p>
+            Puteți trece oricând prin atelier, fără programare. Vedeți lemnul pe bancul de lucru, atingeți
+            finisajele și alegeți în fața plăcilor reale, nu după o poză pe telefon.
+          </p>
+        </div>
+      </div>
+
+      <aside class="lg:col-span-4 lg:col-start-9">
+        <div class="sticky top-28 space-y-6">
+          <div class="overflow-hidden rounded-[1.5rem]" data-reveal-img>
+            <div class="aspect-[4/5]">
+              <Image
+                src={photo('stock/atelier/04')}
+                alt="Detaliu de lucru în atelierul de tâmplărie"
+                widths={[400, 700]}
+                sizes="(min-width: 1024px) 30vw, 100vw"
+                class="img-cover"
+              />
+            </div>
+          </div>
+          <div class="rounded-[1.5rem] bg-walnut-900 p-8 text-bone-50" data-reveal>
+            <p class="text-[0.62rem] font-bold uppercase tracking-[0.2em] text-bone-100/70">Atelierul</p>
+            <ul class="mt-6 space-y-4 text-sm">
+              <li class="flex gap-3">
+                <MapPin size={16} class="mt-0.5 shrink-0 text-oak-400" />
+                <span class="text-bone-100/85">{fullAddress}</span>
+              </li>
+              <li class="flex gap-3">
+                <Clock size={16} class="mt-0.5 shrink-0 text-oak-400" />
+                <span class="text-bone-100/85">
+                  {site.hours.map((h) => <span class="block">{h.days}: {h.time}</span>)}
+                </span>
+              </li>
+            </ul>
+            <a href={site.phoneHref} class="btn btn-oak mt-8 w-full">
+              <Phone size={15} /> {site.phone}
+            </a>
+          </div>
+        </div>
+      </aside>
+    </div>
+  </section>
+
+  <StatsBand />
+
+  <Marquee words={['Măsurăm', 'Desenăm', 'Croim', 'Finisăm', 'Montăm']} class="bg-bone-100 text-walnut-800" />
+
+  <section class="grain relative overflow-hidden bg-walnut-900 py-20 text-bone-50 md:py-28">
+    <div class="container-x">
+      <SectionHeading eyebrow="Principii" title='Patru reguli pe care nu le <em class="italic-serif text-oak-300">încălcăm</em>' light size="md" />
+      <div class="mt-16 grid gap-5 md:grid-cols-2">
+        {
+          principles.map((p, i) => (
+            <div class="rounded-[1.25rem] border border-bone-50/12 p-8" data-reveal data-delay={i * 0.06}>
+              <p class="font-serif text-3xl text-oak-400">{p.n}</p>
+              <h3 class="mt-4 font-serif text-[1.45rem] leading-tight">{p.t}</h3>
+              <p class="mt-3 text-sm leading-relaxed text-bone-100/70">{p.d}</p>
+            </div>
+          ))
+        }
+      </div>
+    </div>
+  </section>
+
+  <section class="bg-bone-100 py-20 md:py-28">
+    <div class="container-x grid gap-14 lg:grid-cols-12">
+      <div class="lg:col-span-5">
+        <SectionHeading eyebrow="Ce primiți" title='La fiecare <em class="italic-serif">lucrare</em>' size="md" />
+        <div class="mt-10 flex flex-wrap gap-4" data-reveal>
+          <a href={url('/proces')} class="btn btn-dark">Cum lucrăm <ArrowRight size={16} /></a>
+          <a href={url('/portofoliu')} class="btn btn-ghost-dark">Portofoliu</a>
+        </div>
+      </div>
+      <div class="lg:col-span-7">
+        <ul class="grid gap-px overflow-hidden rounded-[1.5rem] bg-walnut-900/10 sm:grid-cols-2">
+          {
+            usps.map((u, i) => (
+              <li class="bg-bone-100 p-8" data-reveal data-delay={i * 0.05}>
+                <p class="font-serif text-xl leading-tight text-walnut-900">{u.title}</p>
+                <p class="mt-3 text-sm leading-relaxed text-muted">{u.text}</p>
+              </li>
+            ))
+          }
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <CTASection />
+</BaseLayout>

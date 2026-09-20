@@ -1,0 +1,203 @@
+---
+import { Image } from 'astro:assets';
+import { ArrowRight, ArrowLeft, Clock, Check } from '@lucide/astro';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import Breadcrumbs from '../../components/Breadcrumbs.astro';
+import ProductCard from '../../components/ProductCard.astro';
+import SectionHeading from '../../components/SectionHeading.astro';
+import CTASection from '../../components/CTASection.astro';
+import { guides, type Guide } from '../../data/guides';
+import { related } from '../../data/products';
+import { photo } from '../../lib/photos';
+import { url } from '../../lib/url';
+import { articleSchema, breadcrumbs } from '../../lib/seo';
+
+export function getStaticPaths() {
+  return guides.map((guide) => ({ params: { slug: guide.slug }, props: { guide } }));
+}
+
+interface Props {
+  guide: Guide;
+}
+
+const { guide } = Astro.props;
+const heroImg = photo(guide.hero);
+const index = guides.findIndex((g) => g.slug === guide.slug);
+const prev = guides[(index - 1 + guides.length) % guides.length];
+const next = guides[(index + 1) % guides.length];
+const productLinks = related(guide.relatedProducts);
+
+const origin = new URL(url('/'), Astro.site).href;
+const pageUrl = new URL(url(`/ghiduri/${guide.slug}`), Astro.site).href;
+
+const schemas = [
+  articleSchema({
+    origin,
+    url: pageUrl,
+    headline: guide.h1,
+    description: guide.metaDescription,
+    image: new URL(heroImg.src, Astro.site).href,
+    datePublished: guide.updated,
+    dateModified: guide.updated,
+  }),
+  breadcrumbs([
+    { name: 'Acasă', url: origin },
+    { name: 'Ghiduri', url: new URL(url('/ghiduri'), Astro.site).href },
+    { name: guide.title, url: pageUrl },
+  ]),
+];
+
+const updated = new Date(guide.updated).toLocaleDateString('ro-RO', { day: 'numeric', month: 'long', year: 'numeric' });
+---
+
+<BaseLayout title={guide.metaTitle} description={guide.metaDescription} image={heroImg} schemas={schemas}>
+  <article>
+    <section class="bg-bone-100 pb-12 pt-32 md:pt-40">
+      <div class="container-x">
+        <Breadcrumbs
+          items={[{ name: 'Acasă', href: url('/') }, { name: 'Ghiduri', href: url('/ghiduri') }, { name: guide.title }]}
+        />
+        <p class="eyebrow mt-8" data-reveal>{guide.category}</p>
+        <h1 class="display-md mt-6 max-w-4xl" data-split="hero">{guide.h1}</h1>
+        <div class="mt-8 flex flex-wrap items-center gap-x-8 gap-y-2 text-[0.68rem] font-bold uppercase tracking-[0.18em] text-muted" data-reveal>
+          <span class="flex items-center gap-2"><Clock size={13} /> {guide.readingTime} minute de citit</span>
+          <span>Actualizat: {updated}</span>
+        </div>
+      </div>
+    </section>
+
+    <section class="bg-bone-100">
+      <div class="container-x">
+        <div class="overflow-hidden rounded-[1.75rem]" data-reveal-img>
+          <div class="aspect-[16/9]">
+            <Image
+              src={heroImg}
+              alt={guide.h1}
+              widths={[768, 1280, 1800]}
+              sizes="(min-width: 1440px) 88rem, 100vw"
+              loading="eager"
+              fetchpriority="high"
+              class="img-cover"
+            />
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="bg-bone-100 py-16 md:py-24">
+      <div class="container-x grid gap-16 lg:grid-cols-12">
+        <div class="lg:col-span-7">
+          <div class="rounded-[1.5rem] bg-bone-200/70 p-7 md:p-9" data-reveal>
+            <p class="text-[0.62rem] font-bold uppercase tracking-[0.2em] text-oak-600">Pe scurt</p>
+            <ul class="mt-6 space-y-3.5">
+              {
+                guide.takeaways.map((t) => (
+                  <li class="flex gap-3 text-[0.95rem] leading-relaxed text-walnut-900">
+                    <Check size={16} stroke-width={2.4} class="mt-1 shrink-0 text-oak-600" />
+                    <span>{t}</span>
+                  </li>
+                ))
+              }
+            </ul>
+          </div>
+
+          <div class="prose-wood mt-14 max-w-none">
+            {
+              guide.sections.map((s) => (
+                <div data-reveal>
+                  <h2 class="mt-14 font-serif text-[clamp(1.5rem,2.4vw,2.05rem)] leading-tight text-walnut-900 first:mt-0">{s.h3}</h2>
+                  {s.body.map((p) => <p set:html={p} />)}
+                </div>
+              ))
+            }
+          </div>
+
+          <div class="mt-16 rounded-[1.5rem] bg-walnut-900 p-8 text-bone-50 md:p-10" data-reveal>
+            <p class="font-serif text-[1.7rem] leading-tight">
+              Aveți un proiect și vreți o <em class="italic-serif text-oak-300">părere onestă</em>?
+            </p>
+            <p class="mt-4 max-w-xl text-sm leading-relaxed text-bone-100/70">
+              Sunați-ne sau trimiteți-ne câteva poze pe WhatsApp. Vă spunem ce se poate face, ce nu are
+              sens tehnic și cam în ce interval de buget vă încadrați — înainte să veniți la măsurători.
+            </p>
+            <a href={url('/contact')} class="btn btn-oak mt-8">Cere ofertă gratuită <ArrowRight size={16} /></a>
+          </div>
+        </div>
+
+        <aside class="lg:col-span-4 lg:col-start-9">
+          <div class="sticky top-28 space-y-6">
+            <div class="rounded-[1.5rem] border border-walnut-900/12 p-7" data-reveal>
+              <p class="text-[0.62rem] font-bold uppercase tracking-[0.2em] text-oak-600">Cuprins</p>
+              <ol class="mt-5 space-y-3 text-sm">
+                {
+                  guide.sections.map((s, i) => (
+                    <li class="flex gap-3 text-muted">
+                      <span class="font-serif text-oak-500">{String(i + 1).padStart(2, '0')}</span>
+                      <span class="text-walnut-900">{s.h3}</span>
+                    </li>
+                  ))
+                }
+              </ol>
+            </div>
+
+            <div class="rounded-[1.5rem] border border-walnut-900/12 p-7" data-reveal data-delay="0.1">
+              <p class="text-[0.62rem] font-bold uppercase tracking-[0.2em] text-oak-600">Pe această temă</p>
+              <ul class="mt-5 space-y-2.5 text-sm">
+                {
+                  productLinks.map((p) => (
+                    <li>
+                      <a href={url(`/servicii/${p.slug}`)} class="link-underline text-walnut-900">{p.name}</a>
+                    </li>
+                  ))
+                }
+              </ul>
+            </div>
+
+            <div class="rounded-[1.5rem] border border-walnut-900/12 p-7" data-reveal data-delay="0.15">
+              <p class="text-[0.62rem] font-bold uppercase tracking-[0.2em] text-oak-600">Alte ghiduri</p>
+              <ul class="mt-5 space-y-2.5 text-sm">
+                {
+                  guides
+                    .filter((g) => g.slug !== guide.slug)
+                    .map((g) => (
+                      <li>
+                        <a href={url(`/ghiduri/${g.slug}`)} class="link-underline text-walnut-900">{g.title}</a>
+                      </li>
+                    ))
+                }
+              </ul>
+            </div>
+          </div>
+        </aside>
+      </div>
+    </section>
+
+    <section class="border-t border-walnut-900/10 bg-bone-100">
+      <div class="container-x grid grid-cols-2">
+        <a href={url(`/ghiduri/${prev.slug}`)} class="group flex flex-col gap-2 border-r border-walnut-900/10 py-10 pr-4 md:py-14">
+          <span class="flex items-center gap-2 text-[0.62rem] font-bold uppercase tracking-[0.2em] text-muted">
+            <ArrowLeft size={14} class="transition-transform duration-500 group-hover:-translate-x-1" /> Anterior
+          </span>
+          <span class="font-serif text-lg leading-snug md:text-2xl">{prev.title}</span>
+        </a>
+        <a href={url(`/ghiduri/${next.slug}`)} class="group flex flex-col items-end gap-2 py-10 pl-4 text-right md:py-14">
+          <span class="flex items-center gap-2 text-[0.62rem] font-bold uppercase tracking-[0.2em] text-muted">
+            Următor <ArrowRight size={14} class="transition-transform duration-500 group-hover:translate-x-1" />
+          </span>
+          <span class="font-serif text-lg leading-snug md:text-2xl">{next.title}</span>
+        </a>
+      </div>
+    </section>
+
+    <section class="bg-bone-200/60 py-20 md:py-28">
+      <div class="container-x">
+        <SectionHeading eyebrow="Servicii" title='Ce facem pe această <em class="italic-serif">temă</em>' size="md" />
+        <div class="mt-14 grid gap-6 md:grid-cols-3">
+          {productLinks.map((p, i) => <ProductCard product={p} index={i} />)}
+        </div>
+      </div>
+    </section>
+  </article>
+
+  <CTASection />
+</BaseLayout>

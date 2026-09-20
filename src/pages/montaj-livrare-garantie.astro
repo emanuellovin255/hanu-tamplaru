@@ -1,0 +1,203 @@
+---
+import { Truck, Wrench, ShieldCheck, Trash2, ArrowRight, Check } from '@lucide/astro';
+import BaseLayout from '../layouts/BaseLayout.astro';
+import PageHero from '../components/PageHero.astro';
+import SectionHeading from '../components/SectionHeading.astro';
+import FaqAccordion from '../components/FaqAccordion.astro';
+import CTASection from '../components/CTASection.astro';
+import { areas } from '../data/areas';
+import { photo } from '../lib/photos';
+import { url } from '../lib/url';
+import { breadcrumbs, faqPage } from '../lib/seo';
+
+const origin = new URL(url('/'), Astro.site).href;
+const pageUrl = new URL(url('/montaj-livrare-garantie'), Astro.site).href;
+
+const pillars = [
+  {
+    icon: Truck,
+    title: 'Livrare inclusă',
+    text: 'Transportul în județul Bacău e inclus în ofertă. Aducem mobila ambalată, în ziua stabilită, și o urcăm noi în apartament.',
+  },
+  {
+    icon: Wrench,
+    title: 'Montaj cu echipa noastră',
+    text: 'Nu subcontractăm montajul. Oamenii care montează sunt cei care au făcut mobila, deci știu exact cum se asamblează.',
+  },
+  {
+    icon: Trash2,
+    title: 'Plecăm cu ambalajele',
+    text: 'Cartoane, folii, resturi de placă, praf. Camera rămâne curată, gata de folosit.',
+  },
+  {
+    icon: ShieldCheck,
+    title: 'Garanție 24 de luni',
+    text: 'Pentru corpuri, structuri și feronerie. Remedierea în garanție e gratuită, inclusiv deplasarea.',
+  },
+];
+
+const covered = [
+  'Defecte de material: placă umflată fără cauză externă, furnir desprins, cant dezlipit.',
+  'Defecte de execuție: corpuri care nu sunt la unghi drept, îmbinări slăbite, găuriri greșite.',
+  'Feronerie defectă: balamale care nu mai țin, glisiere blocate, amortizoare care nu mai funcționează.',
+  'Reglaje: uși care s-au lăsat, sertare care freacă, niveluri care s-au modificat după ce casa s-a așezat.',
+];
+
+const notCovered = [
+  'Deteriorări mecanice: lovituri, zgârieturi, tăieturi, arsuri de la vase fierbinți.',
+  'Umezeala din pereți sau din instalații neetanșe, care ajunge în corpuri.',
+  'Inundații, scurgeri prelungite sau apă lăsată să stea pe blat.',
+  'Modificări făcute de altcineva: găuriri, demontări, mutări ale corpurilor.',
+  'Uzura normală a materialelor consumabile, cum sunt tălpile de pâslă.',
+  'Închiderea la culoare a lemnului în timp — e o caracteristică naturală, nu un defect.',
+];
+
+const pageFaq = [
+  { q: 'Montajul costă separat?', a: 'Nu. Transportul și montajul sunt incluse în ofertă pentru tot județul Bacău. În afara județului se tarifează doar deplasarea.' },
+  { q: 'Cât durează montajul?', a: 'O bucătărie sau un dressing mare, o zi până la două. Un unit TV sau un birou, câteva ore. Mobilarea completă a unui apartament se planifică pe etape, de-a lungul mai multor zile.' },
+  { q: 'Trebuie să fiu acasă la montaj?', a: 'Da, măcar la început și la final: la început ca să confirmăm pozițiile, la final pentru recepție. Între timp puteți pleca liniștit.' },
+  { q: 'Demontați mobila veche?', a: 'Da, la cerere. Se tarifează separat, dar vă scutește de o zi de muncă și de drumul la groapa de gunoi.' },
+  { q: 'Ce fac dacă apare o problemă după garanție?', a: 'Ne sunați tot pe noi. Venim contra cost, dar cu piesele pe care le montăm curent și pe care le avem pe stoc — de obicei se rezolvă într-o singură vizită.' },
+];
+
+const schemas = [
+  breadcrumbs([{ name: 'Acasă', url: origin }, { name: 'Montaj, livrare și garanție', url: pageUrl }]),
+  faqPage(pageFaq),
+];
+---
+
+<BaseLayout
+  title="Montaj, livrare și garanție"
+  description="Transport și montaj incluse în județul Bacău, cu echipa noastră. Garanție 24 de luni pentru corpuri, structuri și feronerie. Ce acoperă și ce nu."
+  image={photo('stock/atelier/04')}
+  schemas={schemas}
+>
+  <PageHero
+    eyebrow="După producție"
+    title='Montaj, livrare și <em class="italic-serif text-oak-300">garanție</em>'
+    text="Ce se întâmplă după ce mobila iese din atelier și ce rămâne valabil doi ani de la montaj."
+    image="stock/atelier/04"
+    crumbs={[{ name: 'Acasă', href: url('/') }, { name: 'Montaj, livrare și garanție' }]}
+  />
+
+  <section class="bg-bone-100 py-20 md:py-28">
+    <div class="container-x">
+      <div class="grid gap-px overflow-hidden rounded-[1.5rem] bg-walnut-900/10 sm:grid-cols-2 lg:grid-cols-4">
+        {
+          pillars.map((p, i) => (
+            <div class="bg-bone-100 p-8" data-reveal data-delay={i * 0.06}>
+              <p.icon size={26} stroke-width={1.4} class="text-oak-600" />
+              <h2 class="mt-6 font-serif text-xl leading-tight text-walnut-900">{p.title}</h2>
+              <p class="mt-3 text-sm leading-relaxed text-muted">{p.text}</p>
+            </div>
+          ))
+        }
+      </div>
+    </div>
+  </section>
+
+  <section class="bg-bone-100 pb-20 md:pb-28">
+    <div class="container-x grid gap-16 lg:grid-cols-12">
+      <div class="prose-wood lg:col-span-7">
+        <h2 class="font-serif text-[clamp(1.5rem,2.6vw,2.2rem)] leading-tight text-walnut-900" data-reveal>
+          Cum decurge ziua montajului
+        </h2>
+        <div data-reveal>
+          <p>
+            Vă sunăm cu o zi înainte ca să confirmăm ora. Venim cu mobila ambalată pe bucăți, o urcăm și o
+            despachetăm în cameră, nu pe scară. Protejăm pardoseala cu folie și carton înainte să începem.
+          </p>
+          <p>
+            Asamblăm corpurile, le nivelăm pe soclu, le fixăm de perete acolo unde e cazul și montăm
+            fronturile. La bucătării facem decupajele pentru chiuvetă și plită, racordăm bateria și
+            sifonul și etanșăm zonele expuse la apă.
+          </p>
+          <p>
+            La final reglăm fiecare ușă și fiecare sertar și verificăm împreună cu dumneavoastră. Ce nu e
+            bine, corectăm pe loc. Apoi strângem ambalajele și resturile și le luăm cu noi.
+          </p>
+        </div>
+
+        <div data-reveal>
+          <h2 class="mt-14 font-serif text-[clamp(1.5rem,2.4vw,2.05rem)] leading-tight text-walnut-900">
+            Ce acoperă garanția
+          </h2>
+          <ul>{covered.map((c) => <li>{c}</li>)}</ul>
+        </div>
+
+        <div data-reveal>
+          <h2 class="mt-14 font-serif text-[clamp(1.5rem,2.4vw,2.05rem)] leading-tight text-walnut-900">
+            Ce nu acoperă
+          </h2>
+          <ul>{notCovered.map((c) => <li>{c}</li>)}</ul>
+          <p>
+            Chiar și în situațiile de mai sus venim și reparăm — doar că se tarifează. De regulă costă
+            mult mai puțin decât credeți: o balama, o glisieră sau o refinisare locală sunt intervenții
+            de câteva zeci de lei plus manoperă.
+          </p>
+        </div>
+
+        <div data-reveal>
+          <h2 class="mt-14 font-serif text-[clamp(1.5rem,2.4vw,2.05rem)] leading-tight text-walnut-900">
+            Întreținerea, pe scurt
+          </h2>
+          <ul>
+            <li>Ștergeți fronturile cu lavetă moale, ușor umedă. Fără detergenți abrazivi și fără burete metalic.</li>
+            <li>La blaturile de lemn, nu lăsați apă să stea și nu puneți vase fierbinți direct pe suprafață.</li>
+            <li>Strângeți șuruburile paturilor și ale meselor de masiv o dată pe an, în primii doi ani.</li>
+            <li>La finisajele cu ulei, reîmprospătați o dată la unu-doi ani, cu o cârpă și puțin ulei.</li>
+            <li>Aerisiți bucătăria după gătit — aburul e principalul dușman al canturilor.</li>
+          </ul>
+        </div>
+      </div>
+
+      <aside class="lg:col-span-4 lg:col-start-9">
+        <div class="sticky top-28 space-y-6">
+          <div class="rounded-[1.5rem] bg-walnut-900 p-8 text-bone-50" data-reveal>
+            <p class="text-[0.62rem] font-bold uppercase tracking-[0.2em] text-bone-100/70">Incluse în ofertă</p>
+            <ul class="mt-6 space-y-4 text-sm">
+              {
+                ['Transport în județul Bacău', 'Urcarea în apartament', 'Montajul complet', 'Racorduri la bucătărie', 'Reglaje finale', 'Evacuarea ambalajelor'].map((t) => (
+                  <li class="flex gap-3">
+                    <Check size={16} stroke-width={2.4} class="mt-1 shrink-0 text-oak-400" />
+                    <span class="text-bone-100/85">{t}</span>
+                  </li>
+                ))
+              }
+            </ul>
+            <a href={url('/contact')} class="btn btn-oak mt-8 w-full">Cere ofertă <ArrowRight size={16} /></a>
+          </div>
+
+          <div class="rounded-[1.5rem] border border-walnut-900/12 p-7" data-reveal data-delay="0.1">
+            <p class="text-[0.62rem] font-bold uppercase tracking-[0.2em] text-oak-600">Montăm în</p>
+            <ul class="mt-5 space-y-2 text-sm">
+              {
+                areas.map((a) => (
+                  <li>
+                    <a href={url(`/mobila-la-comanda/${a.slug}`)} class="link-underline text-walnut-900">{a.name}</a>
+                  </li>
+                ))
+              }
+              <li>
+                <a href={url('/zone-deservite')} class="link-underline font-semibold text-walnut-900">…și restul județului</a>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </aside>
+    </div>
+  </section>
+
+  <section class="bg-bone-200/60 py-20 md:py-28">
+    <div class="container-x grid gap-14 lg:grid-cols-12">
+      <div class="lg:col-span-4">
+        <SectionHeading eyebrow="Întrebări" title='Despre <em class="italic-serif">montaj</em>' size="md" />
+      </div>
+      <div class="lg:col-span-7 lg:col-start-6">
+        <FaqAccordion items={pageFaq} />
+      </div>
+    </div>
+  </section>
+
+  <CTASection />
+</BaseLayout>

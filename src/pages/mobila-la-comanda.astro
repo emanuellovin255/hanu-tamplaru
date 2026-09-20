@@ -1,0 +1,274 @@
+---
+import { Image } from 'astro:assets';
+import { ArrowRight, ArrowUpRight, Check } from '@lucide/astro';
+import BaseLayout from '../layouts/BaseLayout.astro';
+import PageHero from '../components/PageHero.astro';
+import ProductCard from '../components/ProductCard.astro';
+import SectionHeading from '../components/SectionHeading.astro';
+import FaqAccordion from '../components/FaqAccordion.astro';
+import CTASection from '../components/CTASection.astro';
+import Marquee from '../components/Marquee.astro';
+import { products } from '../data/products';
+import { steps } from '../data/process';
+import { areas } from '../data/areas';
+import { boards } from '../data/materials';
+import { faq } from '../data/faq';
+import { photo } from '../lib/photos';
+import { url } from '../lib/url';
+import { serviceSchema, breadcrumbs, faqPage } from '../lib/seo';
+
+const origin = new URL(url('/'), Astro.site).href;
+const pageUrl = new URL(url('/mobila-la-comanda'), Astro.site).href;
+const ogUrl = new URL(photo('stock/atmosfera/04').src, Astro.site).href;
+
+const schemas = [
+  serviceSchema({
+    origin,
+    url: pageUrl,
+    name: 'Mobilă la comandă în județul Bacău',
+    description:
+      'Proiectare, producție și montaj de mobilă la comandă în județul Bacău: bucătării, dressinguri, mobilier de living și piese din lemn masiv.',
+    image: ogUrl,
+    serviceType: 'Mobilă la comandă',
+  }),
+  breadcrumbs([
+    { name: 'Acasă', url: origin },
+    { name: 'Mobilă la comandă', url: pageUrl },
+  ]),
+  faqPage(faq.slice(0, 8)),
+];
+---
+
+<BaseLayout
+  title="Mobilă la comandă în județul Bacău"
+  description="Mobilă la comandă în județul Bacău: măsurători gratuite, proiect înainte de producție, materiale la alegere și montaj inclus. Peste 900 de proiecte livrate."
+  image={photo('stock/atmosfera/04')}
+  schemas={schemas}
+>
+  <PageHero
+    eyebrow="Pagina principală de serviciu"
+    title='Mobilă la comandă în <em class="italic-serif text-oak-300">județul Bacău</em>'
+    text="Ghidul complet: ce înseamnă mobila la comandă, cât durează, din ce se face, cum se măsoară și de ce costă diferit de mobila de raft."
+    image="stock/atmosfera/04"
+    crumbs={[{ name: 'Acasă', href: url('/') }, { name: 'Mobilă la comandă' }]}
+  />
+
+  <section class="bg-bone-100 py-20 md:py-28">
+    <div class="container-x grid gap-16 lg:grid-cols-12">
+      <div class="prose-wood lg:col-span-7">
+        <p class="font-serif text-[clamp(1.4rem,2.4vw,2rem)] leading-snug !text-walnut-900" data-reveal>
+          Mobila la comandă nu înseamnă „mobilă scumpă". Înseamnă mobilă croită pe cotele reale ale
+          camerei dumneavoastră, cu materialele pe care le alegeți și cu feroneria pe care o vedeți scrisă
+          în ofertă.
+        </p>
+
+        <div data-reveal>
+          <h2 class="mt-14 font-serif text-[clamp(1.5rem,2.4vw,2.05rem)] leading-tight text-walnut-900">
+            Diferența față de mobila de raft
+          </h2>
+          <p>
+            Mobila de magazin e făcută în module standard: 40, 60, 80 de centimetri. Camera dumneavoastră
+            are 287 de centimetri. Între cele patru module de 60 și perete rămâne un rost de 47 de
+            centimetri, pe care îl acoperiți cu o baghetă sau îl lăsați ca spațiu mort.
+          </p>
+          <p>
+            La comandă, ultimul corp are 47 de centimetri. Diferența, într-o bucătărie, e un dulap întreg.
+            Într-un dressing, e o coloană de sertare. Pe termen lung, asta face diferența dintre o cameră
+            care funcționează și una în care lucrurile stau pe jos.
+          </p>
+          <p>
+            Al doilea avantaj e verticalitatea. Mobila de raft se oprește, de obicei, la doi metri.
+            Într-o cameră cu tavan de 2,60 m, ultimii 60 de centimetri devin un raft de praf. Noi ducem
+            corpurile până în tavan și punem acolo lucrurile de sezon.
+          </p>
+        </div>
+
+        <div data-reveal>
+          <h2 class="mt-14 font-serif text-[clamp(1.5rem,2.4vw,2.05rem)] leading-tight text-walnut-900">
+            Din ce se face mobila la comandă
+          </h2>
+          <p>
+            Cele mai multe proiecte combină trei materiale: <strong>PAL melaminat</strong> pentru corpuri,
+            <strong>MDF vopsit sau furniruit</strong> pentru fronturi și <strong>lemn masiv</strong> pentru
+            piesele care se ating și se văd — blaturi, tăblii, mese, uși.
+          </p>
+          <p>
+            Nu există un material „cel mai bun" în absolut. Există materialul potrivit pentru corpul de sub
+            chiuvetă (PAL hidrofug) și altul, complet diferit, pentru blatul de masă din sufragerie
+            (stejar uscat la 8–10%). O ofertă bună vă explică de ce a ales fiecare material unde l-a pus.
+          </p>
+        </div>
+
+        <div data-reveal>
+          <h2 class="mt-14 font-serif text-[clamp(1.5rem,2.4vw,2.05rem)] leading-tight text-walnut-900">
+            Cât durează, de la telefon la montaj
+          </h2>
+          <p>
+            Între 2 și 6 săptămâni, în funcție de produs. Un birou sau o comodă ies în 2–3 săptămâni. O
+            bucătărie, în 3–5. Piesele de lemn masiv — mese, paturi, scaune, uși — cer 4–6 săptămâni,
+            pentru că lemnul trebuie uscat, șlefuit în mai multe granulații și finisat în straturi
+            succesive, cu timp de uscare între ele.
+          </p>
+          <p>
+            Termenul curge de la aprobarea proiectului și plata avansului, nu de la primul telefon. Între
+            timp se fac măsurătorile și se desenează proiectul, ceea ce mai ia 4–8 zile.
+          </p>
+        </div>
+
+        <div data-reveal>
+          <h2 class="mt-14 font-serif text-[clamp(1.5rem,2.4vw,2.05rem)] leading-tight text-walnut-900">
+            Ce trebuie pregătit înainte de măsurători
+          </h2>
+          <ul>
+            <li>Finisajele de pe pereți — glet, vopsea, faianță — trebuie să fie gata. Măsurăm pe peretele final, nu pe cel de cărămidă.</li>
+            <li>Pardoseala, dacă e posibil. Dacă nu, ne spuneți grosimea exactă a stratului care urmează.</li>
+            <li>Instalațiile mutate în poziția finală: prize, apă, gaz, scurgere.</li>
+            <li>Modelele de electrocasnice, dacă intră în mobilier. Nișele se croiesc pe dimensiunile lor reale.</li>
+          </ul>
+        </div>
+
+        <div data-reveal>
+          <h2 class="mt-14 font-serif text-[clamp(1.5rem,2.4vw,2.05rem)] leading-tight text-walnut-900">
+            De ce nu afișăm prețuri
+          </h2>
+          <p>
+            Pentru că orice cifră ar fi înșelătoare. Aceeași bucătărie de trei metri poate costa de două
+            ori mai mult sau mai puțin, în funcție de fronturi, de blat și de feronerie. Un preț „de la"
+            v-ar face să comparați lucruri care nu se compară.
+          </p>
+          <p>
+            După măsurători primiți o ofertă detaliată pe poziții: fiecare corp, cu dimensiunea lui, cu
+            materialul și cu feroneria montată. Așa vedeți exact unde se duc banii și ce puteți ajusta
+            dacă bugetul e strâmt. Detaliem procedura în ghidul despre
+            <a href={url('/ghiduri/cat-costa-o-bucatarie-la-comanda')}>cât costă o bucătărie la comandă</a>.
+          </p>
+        </div>
+      </div>
+
+      <aside class="lg:col-span-4 lg:col-start-9">
+        <div class="sticky top-28 space-y-6">
+          <div class="rounded-[1.5rem] bg-walnut-900 p-8 text-bone-50" data-reveal>
+            <p class="text-[0.62rem] font-bold uppercase tracking-[0.2em] text-bone-100/70">Pe scurt</p>
+            <ul class="mt-6 space-y-4 text-sm">
+              {
+                [
+                  'Măsurători gratuite în tot județul Bacău',
+                  'Proiect desenat înainte de producție',
+                  'Avans 40–50%, restul la montaj',
+                  'Termen 2–6 săptămâni, după produs',
+                  'Montaj și transport incluse',
+                  'Garanție 24 de luni',
+                ].map((t) => (
+                  <li class="flex gap-3">
+                    <Check size={16} stroke-width={2.4} class="mt-1 shrink-0 text-oak-400" />
+                    <span class="text-bone-100/85">{t}</span>
+                  </li>
+                ))
+              }
+            </ul>
+            <a href={url('/contact')} class="btn btn-oak mt-8 w-full">Cere ofertă <ArrowRight size={16} /></a>
+          </div>
+
+          <div class="overflow-hidden rounded-[1.5rem]" data-reveal-img>
+            <div class="aspect-[4/5]">
+              <Image
+                src={photo('stock/atelier/02')}
+                alt="Mâini de tâmplar lucrând lemnul în atelier"
+                widths={[400, 700]}
+                sizes="(min-width: 1024px) 30vw, 100vw"
+                class="img-cover"
+              />
+            </div>
+          </div>
+        </div>
+      </aside>
+    </div>
+  </section>
+
+  <Marquee words={['Măsurăm', 'Desenăm', 'Producem', 'Montăm']} class="bg-bone-100 text-walnut-800" />
+
+  <section class="bg-bone-200/60 py-20 md:py-28">
+    <div class="container-x">
+      <SectionHeading eyebrow="Plăci și lemn" title='Materialele pe care le <em class="italic-serif">folosim</em>' size="md" />
+      <div class="mt-14 grid gap-px overflow-hidden rounded-[1.5rem] bg-walnut-900/10 md:grid-cols-2 lg:grid-cols-3">
+        {
+          boards.map((b, i) => (
+            <div class="bg-bone-100 p-8" data-reveal data-delay={i * 0.05}>
+              <h3 class="font-serif text-2xl text-walnut-900">{b.name}</h3>
+              <p class="mt-3 text-sm leading-relaxed text-muted">{b.text}</p>
+              <ul class="mt-5 space-y-1.5">
+                {b.pros.slice(0, 3).map((p) => (
+                  <li class="flex gap-2 text-xs text-walnut-800">
+                    <Check size={12} stroke-width={2.6} class="mt-0.5 shrink-0 text-oak-600" /> {p}
+                  </li>
+                ))}
+              </ul>
+            </div>
+          ))
+        }
+      </div>
+      <a href={url('/materiale-si-finisaje')} class="arrow-link mt-12 text-walnut-800" data-reveal>
+        Esențe, finisaje și feronerie <ArrowRight size={16} />
+      </a>
+    </div>
+  </section>
+
+  <section class="bg-bone-100 py-20 md:py-28">
+    <div class="container-x">
+      <SectionHeading eyebrow="Categorii" title='Ce anume vă <em class="italic-serif">trebuie</em>' size="md" />
+      <div class="mt-14 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+        {products.map((p, i) => <ProductCard product={p} index={i} />)}
+      </div>
+    </div>
+  </section>
+
+  <section class="grain relative overflow-hidden bg-walnut-900 py-20 text-bone-50 md:py-28">
+    <div class="container-x">
+      <SectionHeading eyebrow="Pașii" title='De la telefon la <em class="italic-serif text-oak-300">mobila montată</em>' light size="md" />
+      <ol class="mt-14 grid gap-5 md:grid-cols-2 lg:grid-cols-4">
+        {
+          steps.slice(0, 4).map((s, i) => (
+            <li class="rounded-[1.25rem] border border-bone-50/12 p-7" data-reveal data-delay={i * 0.06}>
+              <p class="font-serif text-3xl text-oak-400">{s.n}</p>
+              <h3 class="mt-4 font-serif text-lg leading-tight">{s.title}</h3>
+              <p class="mt-3 text-sm leading-relaxed text-bone-100/70">{s.text}</p>
+            </li>
+          ))
+        }
+      </ol>
+      <a href={url('/proces')} class="arrow-link mt-12 text-oak-300" data-reveal>Toți cei șapte pași <ArrowRight size={16} /></a>
+    </div>
+  </section>
+
+  <section class="bg-bone-100 py-20 md:py-28">
+    <div class="container-x grid gap-14 lg:grid-cols-12">
+      <div class="lg:col-span-4">
+        <SectionHeading eyebrow="Unde lucrăm" title='În tot <em class="italic-serif">județul</em>' size="md" />
+        <a href={url('/zone-deservite')} class="arrow-link mt-8 text-walnut-800" data-reveal>Toate localitățile <ArrowRight size={16} /></a>
+      </div>
+      <div class="lg:col-span-7 lg:col-start-6">
+        <ul class="grid gap-px overflow-hidden rounded-[1.5rem] bg-walnut-900/10 sm:grid-cols-2">
+          {
+            areas.map((a, i) => (
+              <li data-reveal data-delay={Math.min(i, 6) * 0.04}>
+                <a href={url(`/mobila-la-comanda/${a.slug}`)} class="group flex items-center justify-between gap-4 bg-bone-100 px-7 py-5 transition-colors duration-500 hover:bg-bone-200">
+                  <span class="font-serif text-lg text-walnut-900">Mobilă la comandă {a.inName}</span>
+                  <ArrowUpRight size={16} class="shrink-0 text-oak-600 transition-transform duration-500 group-hover:rotate-45" />
+                </a>
+              </li>
+            ))
+          }
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <section class="bg-bone-200/60 py-20 md:py-28">
+    <div class="container-x">
+      <SectionHeading eyebrow="Întrebări frecvente" title='Ce ne <em class="italic-serif">întreabă lumea</em>' size="md" class="mb-12" />
+      <FaqAccordion items={faq.slice(0, 8)} />
+    </div>
+  </section>
+
+  <CTASection />
+</BaseLayout>

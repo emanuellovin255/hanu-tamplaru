@@ -1,0 +1,98 @@
+---
+import { ArrowRight } from '@lucide/astro';
+import BaseLayout from '../layouts/BaseLayout.astro';
+import PageHero from '../components/PageHero.astro';
+import Gallery from '../components/Gallery.astro';
+import CTASection from '../components/CTASection.astro';
+import { products } from '../data/products';
+import { photos, photo } from '../lib/photos';
+import { url } from '../lib/url';
+import { breadcrumbs } from '../lib/seo';
+
+/** Fiecare folder de poze, cu eticheta și categoria pentru filtre. */
+const sets: { folder: string; cat: string; label: string; alt: string }[] = [
+  { folder: 'bucatarii', cat: 'bucatarii', label: 'Bucătării', alt: 'Bucătărie la comandă' },
+  { folder: 'stock/bucatarii', cat: 'bucatarii', label: 'Bucătării', alt: 'Bucătărie la comandă' },
+  { folder: 'dressinguri', cat: 'dressinguri', label: 'Dressinguri', alt: 'Dressing la comandă' },
+  { folder: 'living', cat: 'living', label: 'Living', alt: 'Mobilier de living la comandă' },
+  { folder: 'mese', cat: 'masiv', label: 'Lemn masiv', alt: 'Piesă din lemn masiv' },
+  { folder: 'stock/paturi', cat: 'masiv', label: 'Lemn masiv', alt: 'Pat din lemn masiv' },
+  { folder: 'usi-interior', cat: 'usi', label: 'Uși', alt: 'Uși de interior la comandă' },
+  { folder: 'stock/usi-interior', cat: 'usi', label: 'Uși', alt: 'Uși de interior la comandă' },
+  { folder: 'stock/usi-exterior', cat: 'usi', label: 'Uși', alt: 'Ușă de exterior din lemn masiv' },
+  { folder: 'birouri', cat: 'birouri', label: 'Birouri', alt: 'Birou la comandă' },
+  { folder: 'scaune', cat: 'masiv', label: 'Lemn masiv', alt: 'Scaune din lemn masiv' },
+];
+
+const items = sets.flatMap((s) =>
+  photos(s.folder).map((src, i) => ({ src, alt: `${s.alt} – ${s.label} ${i + 1}`, cat: s.cat })),
+);
+
+const filters = [
+  { id: 'bucatarii', label: 'Bucătării' },
+  { id: 'dressinguri', label: 'Dressinguri' },
+  { id: 'living', label: 'Living' },
+  { id: 'masiv', label: 'Lemn masiv' },
+  { id: 'usi', label: 'Uși' },
+  { id: 'birouri', label: 'Birouri' },
+];
+
+const origin = new URL(url('/'), Astro.site).href;
+const pageUrl = new URL(url('/portofoliu'), Astro.site).href;
+
+const schemas = [
+  breadcrumbs([{ name: 'Acasă', url: origin }, { name: 'Portofoliu', url: pageUrl }]),
+  {
+    '@context': 'https://schema.org',
+    '@type': 'ImageGallery',
+    name: "Portofoliu Hanu Tâmplaru'",
+    description: 'Lucrări de mobilă la comandă realizate în județul Bacău.',
+    url: pageUrl,
+    numberOfItems: items.length,
+  },
+];
+---
+
+<BaseLayout
+  title="Portofoliu — lucrări de mobilă la comandă"
+  description="Bucătării, dressinguri, mobilier de living, uși și piese din lemn masiv realizate de Hanu Tâmplaru' în județul Bacău. Filtrați galeria pe categorii."
+  image={photo('stock/atmosfera/02')}
+  schemas={schemas}
+>
+  <PageHero
+    eyebrow="Portofoliu"
+    title='Lucrări ieșite din <em class="italic-serif text-oak-300">atelier</em>'
+    text={`${items.length} imagini din proiecte livrate și montate. Filtrați pe categorii sau deschideți fiecare imagine la rezoluție mare.`}
+    image="stock/atmosfera/02"
+    crumbs={[{ name: 'Acasă', href: url('/') }, { name: 'Portofoliu' }]}
+  />
+
+  <section class="bg-bone-100 py-20 md:py-28">
+    <div class="container-x">
+      <Gallery items={items} filters={filters} layout="masonry" />
+    </div>
+  </section>
+
+  <section class="bg-bone-200/60 py-20 md:py-28">
+    <div class="container-x">
+      <div class="mb-12 flex flex-col justify-between gap-6 md:flex-row md:items-end">
+        <h2 class="display-md" data-split>Vreți ceva <em class="italic-serif">asemănător</em>?</h2>
+        <a href={url('/servicii')} class="btn btn-ghost-dark shrink-0" data-reveal>Toate serviciile <ArrowRight size={16} /></a>
+      </div>
+      <ul class="grid gap-px overflow-hidden rounded-[1.5rem] bg-walnut-900/10 sm:grid-cols-2 lg:grid-cols-3">
+        {
+          products.map((p, i) => (
+            <li data-reveal data-delay={Math.min(i, 8) * 0.04}>
+              <a href={url(`/servicii/${p.slug}`)} class="group flex items-center justify-between gap-4 bg-bone-100 px-7 py-6 transition-colors duration-500 hover:bg-bone-200">
+                <span class="font-serif text-xl text-walnut-900">{p.name}</span>
+                <ArrowRight size={16} class="shrink-0 text-oak-600 transition-transform duration-500 group-hover:translate-x-1" />
+              </a>
+            </li>
+          ))
+        }
+      </ul>
+    </div>
+  </section>
+
+  <CTASection />
+</BaseLayout>
