@@ -23,7 +23,7 @@ interface Props {
 }
 
 const { area } = Astro.props;
-const heroImages = ['stock/atmosfera/01', 'stock/bucatarii/02', 'stock/atmosfera/04', 'stock/bucatarii/03'];
+const heroImages = ['dressinguri/02', 'stock/bucatarii/02', 'stock/atmosfera/04', 'stock/bucatarii/03'];
 const heroImage = heroImages[areas.findIndex((a) => a.slug === area.slug) % heroImages.length];
 
 const others = areas.filter((a) => a.slug !== area.slug);

@@ -20,10 +20,10 @@ import { url } from '../lib/url';
 import { faqPage, itemList } from '../lib/seo';
 
 const slides = [
-  { src: photo('stock/atmosfera/01'), alt: 'Hol cu mobilier la comandă și perete din lamele de lemn' },
-  { src: photo('stock/bucatarii/01'), alt: 'Bucătărie la comandă, cu fronturi antracit și nișă din lemn' },
-  { src: photo('stock/paturi/02'), alt: 'Dormitor cu pat și tăblie din lemn masiv' },
-  { src: photo('stock/atelier/03'), alt: 'Atelierul de tâmplărie Hanu Tâmplaru\', în Pârjol' },
+  { src: photo('dressinguri/02'), alt: 'Hol cu dressing pe colț, fronturi antracit și lamele de lemn' },
+  { src: photo('bucatarii/01'), alt: 'Bucătărie la comandă, cu fronturi antracit și blat de lemn' },
+  { src: photo('mese/01'), alt: 'Masă și colțar din lemn masiv, într-o casă din județul Bacău' },
+  { src: photo('living/01'), alt: 'Comodă TV pe perete cu lamele, lucrare de living' },
 ];
 
 const origin = new URL(url('/'), Astro.site).href;
@@ -37,7 +37,7 @@ const schemas = [
 ];
 ---
 
-<BaseLayout intro image={photo('stock/atmosfera/01')} schemas={schemas}>
+<BaseLayout intro image={photo('mese/01')} schemas={schemas}>
   <!-- HERO -->
   <section class="relative flex min-h-[100svh] flex-col overflow-hidden bg-walnut-950 text-white" data-hero>
     <div class="absolute inset-0">
@@ -119,16 +119,17 @@ const schemas = [
     <div class="container-x">
       <p class="eyebrow" data-reveal>Hanu Tâmplaru' · din 2009</p>
       <p class="mt-10 max-w-6xl font-serif text-[clamp(1.8rem,4.2vw,3.9rem)] leading-[1.14] tracking-[-0.02em] text-walnut-900" data-scrub-words>
-        Mobila de raft se potrivește într-o casă imaginară. A dumneavoastră are pereți strâmbi, o țeavă
-        exact acolo unde nu trebuie și un colț care nu e de nouăzeci de grade. Noi pornim de la casa reală.
+        Nu vindem module dintr-un catalog. Venim cu metrul la dumneavoastră acasă, desenăm mobila pe
+        spațiul care există deja și o facem în atelier, bucată cu bucată. Intră la milimetru, pentru că
+        a fost gândită pentru camera aceea.
       </p>
 
       <div class="mt-20 grid items-center gap-16 md:mt-28 lg:grid-cols-12 lg:gap-10">
         <div class="relative lg:col-span-7">
           <div class="relative aspect-[4/5] overflow-hidden rounded-[1.75rem] md:aspect-[5/4]" data-reveal-img>
             <Image
-              src={photo('stock/atelier/01')}
-              alt="Tâmplar rindeluind o scândură în atelierul din Pârjol"
+              src={photo('bucatarii/03')}
+              alt="Bucătărie la comandă, croită pe peretele cu fereastră și coloană, într-un apartament"
               widths={[640, 1024, 1400]}
               sizes="(min-width: 1024px) 55vw, 100vw"
               class="img-cover"
@@ -137,8 +138,8 @@ const schemas = [
           <div class="absolute -bottom-10 right-4 hidden w-[38%] overflow-hidden rounded-[1.25rem] border-[6px] border-bone-100 shadow-2xl md:block lg:-right-10" data-reveal-img data-delay="0.2">
             <div class="aspect-[3/4]">
               <Image
-                src={photo('stock/texturi/03')}
-                alt="Detaliu de fibră de lemn masiv, cu noduri"
+                src={photo('usi-interior/01')}
+                alt="Dressing cu uși glisante și panou din lamele de lemn, pe holul unei case"
                 widths={[400, 700]}
                 sizes="25vw"
                 class="img-cover"
