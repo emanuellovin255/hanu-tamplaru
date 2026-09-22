@@ -471,23 +471,6 @@
   to { transform: translateX(-50%); }
 }
 
-/* Intro (doar pe prima pagină, o dată pe sesiune) */
-.intro-curtain {
-  animation: curtain-up 0.75s var(--ease-in-out-quart) 0.55s forwards;
-}
-.intro-curtain .intro-word {
-  animation: intro-word 0.7s var(--ease-out-expo) 0.05s both;
-}
-@keyframes curtain-up {
-  to { transform: translateY(-100%); visibility: hidden; }
-}
-@keyframes intro-word {
-  from { transform: translateY(110%); }
-}
-.no-intro .intro-curtain {
-  display: none;
-}
-
 /* Scroll cue */
 .scroll-cue::after {
   content: '';

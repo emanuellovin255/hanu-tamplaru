@@ -1,8 +1,7 @@
 ---
 import '../styles/global.css';
 import type { ImageMetadata } from 'astro';
-import { Image, getImage } from 'astro:assets';
-import brandLogo from '../assets/brand/logo.png';
+import { getImage } from 'astro:assets';
 import frauncesNormal from '../assets/fonts/fraunces-latin-normal.woff2?url';
 import frauncesNormalExt from '../assets/fonts/fraunces-latin-ext-normal.woff2?url';
 import frauncesItalic from '../assets/fonts/fraunces-latin-italic.woff2?url';
@@ -22,7 +21,6 @@ interface Props {
   title?: string;
   description?: string;
   image?: ImageMetadata;
-  intro?: boolean;
   /** Scheme JSON-LD suplimentare, specifice paginii. */
   schemas?: Record<string, unknown>[];
   noindex?: boolean;
@@ -32,7 +30,6 @@ const {
   title,
   description = site.metaDescription,
   image = photo('mese/01'),
-  intro = false,
   schemas = [],
   noindex = false,
 } = Astro.props;
@@ -105,17 +102,11 @@ const preloadFonts = [
     }
 
     <script is:inline>
-      // Rulează înainte de randare: activează animațiile și intro-ul (o dată pe sesiune).
+      // Rulează înainte de randare: activează animațiile.
       (function () {
         var root = document.documentElement;
         root.classList.remove('no-js');
         root.classList.add('js');
-        try {
-          if (sessionStorage.getItem('ht-intro')) root.classList.add('no-intro');
-          else sessionStorage.setItem('ht-intro', '1');
-        } catch (e) {
-          root.classList.add('no-intro');
-        }
         setTimeout(function () {
           if (!window.__motionReady) root.classList.add('motion-fallback');
         }, 1200);
@@ -125,25 +116,6 @@ const preloadFonts = [
   </head>
   <body>
     <a href="#main" class="skip-link">Sari la conținut</a>
-
-    {
-      intro && (
-        <div class="intro-curtain fixed inset-0 z-[90] flex items-center justify-center bg-walnut-950 text-bone-50" aria-hidden="true">
-          <div class="overflow-hidden px-8">
-            <Image
-              src={brandLogo}
-              alt=""
-              widths={[320, 480]}
-              sizes="(min-width: 768px) 420px, 280px"
-              format="webp"
-              quality={78}
-              loading="eager"
-              class="intro-word w-[17.5rem] md:w-[26rem]"
-            />
-          </div>
-        </div>
-      )
-    }
 
     <Header />
     <main id="main" tabindex="-1">
