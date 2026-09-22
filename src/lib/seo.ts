@@ -14,7 +14,12 @@ export function localBusiness(origin: string, image: string) {
     description: site.description,
     url: origin,
     image,
-    logo: `${origin.replace(/\/$/, '')}/favicon.svg`,
+    logo: {
+      '@type': 'ImageObject',
+      url: `${origin.replace(/\/$/, '')}/logo.png`,
+      width: 1200,
+      height: 630,
+    },
     telephone: site.phoneIntl,
     email: site.email,
     foundingDate: String(site.foundingYear),

@@ -20,6 +20,7 @@ Scripturi auxiliare:
 npm run prepare-photos   # Poze/*.png → src/assets/photos/<categorie>/NN.jpg (sharp)
 npm run fetch-stock      # descarcă imaginile de completare de pe Pexels
 node scripts/seo-check.mjs   # verifică titluri, descrieri, JSON-LD, linkuri, sitemap
+node scripts/make-logo.mjs   # regenerează variantele de logo din logo-original.png
 ```
 
 ## Structura site-ului
@@ -50,6 +51,23 @@ Toate se schimbă într-un **singur fișier**, `src/data/site.ts`:
 - `formEndpoint` — cheia de acces de la [web3forms.com](https://web3forms.com) (gratuit).
   **Cât timp e gol, formularul funcționează**: compune mesajul și îl deschide în WhatsApp,
   cu toate câmpurile completate. Cu cheia pusă, trimite direct pe email.
+
+## Logo
+
+Sursa e `src/assets/brand/logo-original.png` (lockup-ul pe fundal verde, așa cum a fost primit).
+`node scripts/make-logo.mjs` decupează fundalul și generează restul variantelor — nu se editează de mână:
+
+| Fișier | Unde se folosește |
+|---|---|
+| `src/assets/brand/logo.png` | header, footer, cortina de intro (transparent, servit ca WebP) |
+| `src/assets/brand/mark.png` | semnul singur (pătratul cu inele), transparent |
+| `public/logo.png` | `logo` din schema.org, partajări pe rețele (1200×630) |
+| `public/favicon.svg` | favicon vectorial, versiunea simplificată a semnului |
+| `public/icon-192.png`, `public/icon-512.png` | icoane PWA, din `site.webmanifest` |
+| `public/apple-touch-icon.png` | icoana de pe ecranul iPhone/iPad |
+
+Dacă logoul se schimbă, se înlocuiește `logo-original.png` și se rulează din nou scriptul.
+Culorile de brand din logo: verde `#0b312b`, nuc `#764f32`, stejar `#a37947`, gri `#6b6b6b`.
 
 ## Imagini
 

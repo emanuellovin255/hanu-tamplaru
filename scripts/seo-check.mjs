@@ -87,7 +87,12 @@ for (const [t, n] of [...types].sort((a, b) => b[1] - a[1])) console.log(`  ${St
 
 // 4. Linkuri interne moarte
 const routes = new Set(pages.map((p) => BASE + (p.route === '/' ? '/' : p.route)));
-const assets = new Set(['/hanu-tamplaru/favicon.svg', '/hanu-tamplaru/init.js', '/hanu-tamplaru/sitemap.xml', '/hanu-tamplaru/robots.txt']);
+// Fișierele din rădăcina dist/ (favicon, logo, icoane, manifest, robots…) sunt linkuri valide.
+const assets = new Set(
+  (await readdir(DIST, { withFileTypes: true }))
+    .filter((e) => e.isFile() && !e.name.endsWith('.html'))
+    .map((e) => `${BASE}/${e.name}`),
+);
 const broken = new Map();
 for (const p of pages) {
   for (const l of p.links) {
