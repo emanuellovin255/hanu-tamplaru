@@ -471,6 +471,20 @@
   to { transform: translateX(-50%); }
 }
 
+/* Intro (doar pe prima pagină) — aproximativ 2 secunde cap-coadă */
+.intro-curtain {
+  animation: curtain-up 0.8s var(--ease-in-out-quart) 1.2s forwards;
+}
+.intro-curtain .intro-word {
+  animation: intro-word 0.9s var(--ease-out-expo) 0.05s both;
+}
+@keyframes curtain-up {
+  to { transform: translateY(-100%); visibility: hidden; }
+}
+@keyframes intro-word {
+  from { transform: translateY(110%); }
+}
+
 /* Scroll cue */
 .scroll-cue::after {
   content: '';
@@ -527,6 +541,9 @@ details[open] .faq-icon {
 }
 
 @media (prefers-reduced-motion: reduce) {
+  .intro-curtain {
+    display: none;
+  }
   *,
   *::before,
   *::after {

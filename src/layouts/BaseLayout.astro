@@ -1,7 +1,8 @@
 ---
 import '../styles/global.css';
 import type { ImageMetadata } from 'astro';
-import { getImage } from 'astro:assets';
+import { Image, getImage } from 'astro:assets';
+import brandLogo from '../assets/brand/logo.png';
 import frauncesNormal from '../assets/fonts/fraunces-latin-normal.woff2?url';
 import frauncesNormalExt from '../assets/fonts/fraunces-latin-ext-normal.woff2?url';
 import frauncesItalic from '../assets/fonts/fraunces-latin-italic.woff2?url';
@@ -21,6 +22,7 @@ interface Props {
   title?: string;
   description?: string;
   image?: ImageMetadata;
+  intro?: boolean;
   /** Scheme JSON-LD suplimentare, specifice paginii. */
   schemas?: Record<string, unknown>[];
   noindex?: boolean;
@@ -30,6 +32,7 @@ const {
   title,
   description = site.metaDescription,
   image = photo('mese/01'),
+  intro = false,
   schemas = [],
   noindex = false,
 } = Astro.props;
@@ -116,6 +119,25 @@ const preloadFonts = [
   </head>
   <body>
     <a href="#main" class="skip-link">Sari la conținut</a>
+
+    {
+      intro && (
+        <div class="intro-curtain fixed inset-0 z-[90] flex items-center justify-center bg-walnut-950 text-bone-50" aria-hidden="true">
+          <div class="overflow-hidden px-8">
+            <Image
+              src={brandLogo}
+              alt=""
+              widths={[320, 480]}
+              sizes="(min-width: 768px) 420px, 280px"
+              format="webp"
+              quality={78}
+              loading="eager"
+              class="intro-word w-[17.5rem] md:w-[26rem]"
+            />
+          </div>
+        </div>
+      )
+    }
 
     <Header />
     <main id="main" tabindex="-1">

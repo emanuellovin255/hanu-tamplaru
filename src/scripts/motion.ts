@@ -54,7 +54,8 @@ window.addEventListener('scroll', onScroll, { passive: true });
 onScroll();
 
 /* ——— Animații ——— */
-const heroDelay = 0.25;
+const introShown = !!document.querySelector('.intro-curtain');
+const heroDelay = introShown ? 1.45 : 0.25;
 
 if (reduce) {
   gsap.set('[data-reveal], [data-reveal-img], [data-split]', {
