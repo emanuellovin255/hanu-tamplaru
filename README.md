@@ -19,8 +19,9 @@ Scripturi auxiliare:
 ```bash
 npm run prepare-photos   # Poze/*.png → src/assets/photos/<categorie>/NN.jpg (sharp)
 npm run fetch-stock      # descarcă imaginile de completare de pe Pexels
-node scripts/seo-check.mjs   # verifică titluri, descrieri, JSON-LD, linkuri, sitemap
-node scripts/make-logo.mjs   # regenerează variantele de logo din logo-original.png
+npm run seo-check        # verifică titluri, descrieri, JSON-LD, linkuri, sitemap
+npm run make-logo        # regenerează variantele de logo din logo-original.png
+npm run subset-fonts     # retaie fonturile la caracterele folosite în site
 ```
 
 ## Structura site-ului
@@ -51,6 +52,18 @@ Toate se schimbă într-un **singur fișier**, `src/data/site.ts`:
 - `formEndpoint` — cheia de acces de la [web3forms.com](https://web3forms.com) (gratuit).
   **Cât timp e gol, formularul funcționează**: compune mesajul și îl deschide în WhatsApp,
   cu toate câmpurile completate. Cu cheia pusă, trimite direct pe email.
+
+## Fonturi
+
+Fraunces și Manrope vin de la Fontsource cu tot alfabetul latin — peste 530 kB pentru o pagină
+în română. `npm run subset-fonts` le taie la cele ~200 de caractere folosite efectiv și fixează
+axele variabile pe care site-ul nu le mișcă (`WONK` la varianta dreaptă; `opsz`, `SOFT`, `WONK`
+la italice, care apar doar prin `.italic-serif`). Rezultatul — **533 kB → 178 kB** — se scrie în
+`src/assets/fonts/` și `src/styles/fonts.css`, ambele urcate în repo, pentru că build-ul de pe
+Vercel nu rulează scriptul.
+
+Se rulează din nou când se schimbă fontul sau când apare în texte un caracter nou (un simbol,
+o literă dintr-o altă limbă). Fonturile sunt preîncărcate din `BaseLayout.astro`.
 
 ## Logo
 

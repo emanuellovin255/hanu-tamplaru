@@ -41,21 +41,29 @@ const schemas = [
   <!-- HERO -->
   <section class="relative flex min-h-[100svh] flex-col overflow-hidden bg-walnut-950 text-white" data-hero>
     <div class="absolute inset-0">
-      {
-        slides.map((s, i) => (
-          <div class:list={['hero-slide absolute inset-0 overflow-hidden', i === 0 && 'is-active']} data-slide>
-            <Image
-              src={s.src}
-              alt={s.alt}
-              widths={[768, 1280, 1920]}
-              sizes="100vw"
-              loading={i === 0 ? 'eager' : 'lazy'}
-              fetchpriority={i === 0 ? 'high' : 'auto'}
-              class="img-cover"
-            />
-          </div>
-        ))
-      }
+      <div class="hero-slide is-active absolute inset-0 overflow-hidden" data-slide>
+        <Image
+          src={slides[0].src}
+          alt={slides[0].alt}
+          widths={[768, 1280, 1920]}
+          sizes="100vw"
+          loading="eager"
+          fetchpriority="high"
+          class="img-cover"
+        />
+      </div>
+
+      {/* Restul slide-urilor stau într-un <template>: browserul nu le descarcă
+          până nu le punem în pagină, după ce s-a încărcat ce se vede. */}
+      <template data-slides>
+        {
+          slides.slice(1).map((s) => (
+            <div class="hero-slide absolute inset-0 overflow-hidden" data-slide>
+              <Image src={s.src} alt={s.alt} widths={[768, 1280, 1920]} sizes="100vw" loading="lazy" class="img-cover" />
+            </div>
+          ))
+        }
+      </template>
       <div class="absolute inset-0 bg-gradient-to-b from-walnut-950/65 via-walnut-950/35 to-walnut-950/92"></div>
       <div class="absolute inset-0 bg-gradient-to-r from-walnut-950/65 via-walnut-950/20 to-transparent"></div>
     </div>
@@ -425,7 +433,7 @@ const schemas = [
 <script>
   const hero = document.querySelector<HTMLElement>('[data-hero]');
   if (hero) {
-    const slides = Array.from(hero.querySelectorAll<HTMLElement>('[data-slide]'));
+    let slides = Array.from(hero.querySelectorAll<HTMLElement>('[data-slide]'));
     const current = hero.querySelector<HTMLElement>('[data-slide-current]');
     const progress = hero.querySelector<HTMLElement>('[data-slide-progress]');
     const DURATION = 6500;
@@ -456,14 +464,23 @@ const schemas = [
     };
     const stop = () => window.clearInterval(timer);
 
-    window.addEventListener('load', () => {
+    /** Scoate slide-urile 2-4 din <template> și le lasă să se încarce. */
+    const inflate = () => {
+      const tpl = hero.querySelector<HTMLTemplateElement>('template[data-slides]');
+      if (!tpl) return;
+      tpl.replaceWith(tpl.content);
+      slides = Array.from(hero.querySelectorAll<HTMLElement>('[data-slide]'));
       slides.slice(1).forEach((s) => s.querySelector('img')?.setAttribute('loading', 'eager'));
-    });
 
-    if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches && slides.length > 1) {
-      animateProgress();
-      start();
-      document.addEventListener('visibilitychange', () => (document.hidden ? stop() : start()));
-    }
+      if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches && slides.length > 1) {
+        animateProgress();
+        start();
+        document.addEventListener('visibilitychange', () => (document.hidden ? stop() : start()));
+      }
+    };
+
+    const later = () => window.setTimeout(inflate, 400);
+    if (document.readyState === 'complete') later();
+    else window.addEventListener('load', later);
   }
 </script>

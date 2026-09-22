@@ -3,6 +3,12 @@ import '../styles/global.css';
 import type { ImageMetadata } from 'astro';
 import { Image, getImage } from 'astro:assets';
 import brandLogo from '../assets/brand/logo.png';
+import frauncesNormal from '../assets/fonts/fraunces-latin-normal.woff2?url';
+import frauncesNormalExt from '../assets/fonts/fraunces-latin-ext-normal.woff2?url';
+import frauncesItalic from '../assets/fonts/fraunces-latin-italic.woff2?url';
+import frauncesItalicExt from '../assets/fonts/fraunces-latin-ext-italic.woff2?url';
+import manropeNormal from '../assets/fonts/manrope-latin-normal.woff2?url';
+import manropeNormalExt from '../assets/fonts/manrope-latin-ext-normal.woff2?url';
 import Header from '../components/Header.astro';
 import Footer from '../components/Footer.astro';
 import MobileCTA from '../components/MobileCTA.astro';
@@ -45,6 +51,17 @@ const ogImage = new URL(og.src, Astro.site);
 const origin = new URL(url('/'), Astro.site).href;
 
 const allSchemas = [localBusiness(origin, ogImage.href), ...schemas];
+
+/** Toate textele de deasupra pliului sunt în română, cu diacritice, și folosesc
+ *  ambele fonturi — deci preîncărcăm tot setul, altfel pornesc abia după CSS. */
+const preloadFonts = [
+  manropeNormal,
+  manropeNormalExt,
+  frauncesNormal,
+  frauncesNormalExt,
+  frauncesItalic,
+  frauncesItalicExt,
+];
 ---
 
 <!doctype html>
@@ -81,7 +98,29 @@ const allSchemas = [localBusiness(origin, ogImage.href), ...schemas];
     <meta name="twitter:description" content={description} />
     <meta name="twitter:image" content={ogImage} />
 
-    <script is:inline src={url('/init.js')}></script>
+    {
+      preloadFonts.map((href) => (
+        <link rel="preload" as="font" type="font/woff2" href={href} crossorigin />
+      ))
+    }
+
+    <script is:inline>
+      // Rulează înainte de randare: activează animațiile și intro-ul (o dată pe sesiune).
+      (function () {
+        var root = document.documentElement;
+        root.classList.remove('no-js');
+        root.classList.add('js');
+        try {
+          if (sessionStorage.getItem('ht-intro')) root.classList.add('no-intro');
+          else sessionStorage.setItem('ht-intro', '1');
+        } catch (e) {
+          root.classList.add('no-intro');
+        }
+        setTimeout(function () {
+          if (!window.__motionReady) root.classList.add('motion-fallback');
+        }, 1200);
+      })();
+    </script>
     {allSchemas.map((schema) => <script type="application/ld+json" set:html={JSON.stringify(schema)} />)}
   </head>
   <body>
@@ -94,9 +133,10 @@ const allSchemas = [localBusiness(origin, ogImage.href), ...schemas];
             <Image
               src={brandLogo}
               alt=""
-              widths={[420, 840]}
+              widths={[320, 480]}
               sizes="(min-width: 768px) 420px, 280px"
               format="webp"
+              quality={78}
               loading="eager"
               class="intro-word w-[17.5rem] md:w-[26rem]"
             />
