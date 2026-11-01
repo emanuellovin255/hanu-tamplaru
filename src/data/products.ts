@@ -108,7 +108,7 @@ export const products: Product[] = [
       },
     ],
     folders: ['bucatarii', 'stock/bucatarii'],
-    hero: 'stock/bucatarii/01',
+    hero: 'bucatarii/06',
     related: ['dressinguri', 'mobilier-living', 'mese-lemn-masiv'],
   },
   {
@@ -340,8 +340,8 @@ export const products: Product[] = [
         a: 'Nucul și cireșul se închid vizibil în primii doi ani, mai ales la lumină directă. Stejarul și frasinul se îngălbenesc ușor. Finisajul cu filtru UV încetinește procesul, dar nu îl oprește — e o caracteristică a lemnului, nu un defect.',
       },
     ],
-    folders: ['stock/paturi'],
-    hero: 'stock/paturi/02',
+    folders: ['paturi', 'stock/paturi'],
+    hero: 'paturi/01',
     related: ['dressinguri', 'mese-lemn-masiv', 'mobilier-living'],
   },
   {
@@ -422,8 +422,8 @@ export const products: Product[] = [
         a: '68 mm e suficient pentru majoritatea caselor. 78 mm merită dacă intrarea dă direct în exterior, fără hol tampon, sau dacă locuiți într-o zonă cu vânt și cu ierni lungi.',
       },
     ],
-    folders: ['stock/usi-exterior'],
-    hero: 'stock/usi-exterior/01',
+    folders: ['usi-exterior', 'stock/usi-exterior'],
+    hero: 'usi-exterior/01',
     related: ['usi-interior', 'mese-lemn-masiv', 'paturi-lemn-masiv'],
   },
   {
@@ -738,7 +738,7 @@ export const products: Product[] = [
       },
     ],
     folders: ['scaune', 'stock/scaune'],
-    hero: 'stock/scaune/01',
+    hero: 'scaune/03',
     related: ['mese-lemn-masiv', 'bucatarii', 'mobilier-living'],
   },
 ];

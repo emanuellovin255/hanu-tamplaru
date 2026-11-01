@@ -16,12 +16,15 @@ const sets: { folder: string; cat: string; label: string; alt: string }[] = [
   { folder: 'dressinguri', cat: 'dressinguri', label: 'Dressinguri', alt: 'Dressing la comandă' },
   { folder: 'living', cat: 'living', label: 'Living', alt: 'Mobilier de living la comandă' },
   { folder: 'mese', cat: 'masiv', label: 'Lemn masiv', alt: 'Piesă din lemn masiv' },
+  { folder: 'paturi', cat: 'masiv', label: 'Lemn masiv', alt: 'Pat din lemn masiv' },
   { folder: 'stock/paturi', cat: 'masiv', label: 'Lemn masiv', alt: 'Pat din lemn masiv' },
+  { folder: 'usi-exterior', cat: 'usi', label: 'Uși', alt: 'Ușă de exterior din lemn masiv' },
   { folder: 'usi-interior', cat: 'usi', label: 'Uși', alt: 'Uși de interior la comandă' },
   { folder: 'stock/usi-interior', cat: 'usi', label: 'Uși', alt: 'Uși de interior la comandă' },
   { folder: 'stock/usi-exterior', cat: 'usi', label: 'Uși', alt: 'Ușă de exterior din lemn masiv' },
   { folder: 'birouri', cat: 'birouri', label: 'Birouri', alt: 'Birou la comandă' },
   { folder: 'scaune', cat: 'masiv', label: 'Lemn masiv', alt: 'Scaune din lemn masiv' },
+  { folder: 'unicate', cat: 'unicate', label: 'Unicate', alt: 'Lucrare unicat din lemn' },
 ];
 
 const items = sets.flatMap((s) =>
@@ -35,6 +38,7 @@ const filters = [
   { id: 'masiv', label: 'Lemn masiv' },
   { id: 'usi', label: 'Uși' },
   { id: 'birouri', label: 'Birouri' },
+  { id: 'unicate', label: 'Unicate' },
 ];
 
 const origin = new URL(url('/'), Astro.site).href;

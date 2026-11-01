@@ -1,4 +1,4 @@
-// Transformă screenshot-urile din Poze/ în JPEG-uri optimizate, pe categorii.
+// Transformă pozele din Poze/ în JPEG-uri optimizate, pe categorii.
 // Rulare: npm run prepare-photos
 import { mkdir, rm } from 'node:fs/promises';
 import { join } from 'node:path';
@@ -26,10 +26,25 @@ const MAP = {
   'Screenshot 2026-09-20 at 09.38.29.png': ['living/04'],
   'Screenshot 2026-09-20 at 09.38.05.png': ['mese/01', 'scaune/02'],
   'Screenshot 2026-09-20 at 09.37.25.png': ['mese/02'],
+  // Pozele primite pe WhatsApp, octombrie 2026
+  'bucatarie-gri-01.jpeg': ['bucatarii/06'],
+  'bucatarie-gri-02.jpeg': ['bucatarii/07'],
+  'bucatarie-gri-03.jpeg': ['bucatarii/08'],
+  'bucatarie-gri-04.jpeg': ['bucatarii/09'],
+  'bucatarie-antracit.jpeg': ['bucatarii/10'],
+  'pat-masiv-01.jpeg': ['paturi/01'],
+  'pat-masiv-02.jpeg': ['paturi/02'],
+  'usa-exterior-01.jpeg': ['usi-exterior/01'],
+  'usa-exterior-atelier.jpeg': ['usi-exterior/02'],
+  'scaun-masiv.jpeg': ['scaune/03'],
+  'balcon-lemn.jpeg': ['unicate/01'],
+  'cuier-lemn.jpeg': ['unicate/02'],
+  'mobilier-baie.jpeg': ['unicate/03'],
+  'banca-masa-gradina.jpeg': ['unicate/04'],
 };
 
 await rm(join(OUT, 'bucatarii'), { recursive: true, force: true });
-for (const dir of ['bucatarii', 'dressinguri', 'living', 'mese', 'scaune', 'birouri', 'usi-interior']) {
+for (const dir of ['bucatarii', 'dressinguri', 'living', 'mese', 'scaune', 'birouri', 'usi-interior', 'usi-exterior', 'paturi', 'unicate']) {
   await mkdir(join(OUT, dir), { recursive: true });
 }
 
